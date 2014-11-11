@@ -47,12 +47,12 @@ app.run(['GAuth', 'GApi', '$state',
 
         GAuth.setClient(CLIENT);
         GAuth.setLoginSuccess(function() {
-            $state.go('webapp.home');  // an example of action if it's possible to authenticate
-                                       // user at startup of the application
+            $state.go('webapp.home');  // an example of action if it's possible to
+                                       // authenticate user at startup of the application
         });
         GAuth.setLoginFail(function() {
-            $state.go('webapp.login'); // an example of action if it's impossible to authenticate
-                                       // user at startup of the application
+            $state.go('webapp.login'); // an example of action if it's impossible to
+                                       // authenticate user at startup of the application
         });
         GAuth.load(function () {
             GAuth.login(function () {
