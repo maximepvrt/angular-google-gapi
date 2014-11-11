@@ -8,7 +8,7 @@ An AngularJS module for use Google Cloud Endpoints.
 - ([AngularJS](http://angularjs.org))
 
 ## Installation
-# Loading
+### Loading
 Load the script files in your application:
 
     <script type="text/javascript" src="vendors/angular-cloud-endpoints-0.1.js"></script>
@@ -31,7 +31,7 @@ app.run(['GApi',
     }
 ]);
 ```
-# Configuration with google auth
+### Configuration with google auth
 
 add run in root module
 
@@ -61,7 +61,7 @@ app.run(['GAuth', 'GApi', '$state',
 
 ## Use
 
-# Execute your api without params
+### Execute your api without params
 
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
@@ -74,7 +74,7 @@ app.controller('myController', ['$scope', 'GApi',
 ]);
 ```
 
-# Execute your api with params
+### Execute your api with params
 
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
@@ -87,7 +87,7 @@ app.controller('myController', ['$scope', 'GApi',
 ]);
 ```
 
-# Signup with google
+### Signup with google
 
 ```javascript
 app.controller('myController', ['$scope', 'GAuth', '$state',
