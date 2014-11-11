@@ -11,7 +11,9 @@ An AngularJS module for use Google Cloud Endpoints.
 ### Loading
 Load the script files in your application:
 
-    <script type="text/javascript" src="vendors/angular-cloud-endpoints-0.1.js"></script>
+```html
+<script type="text/javascript" src="vendors/angular-cloud-endpoints-0.1.js"></script>
+```
 
 add dependencies on AngularJS:
 
