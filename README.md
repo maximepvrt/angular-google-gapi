@@ -19,7 +19,8 @@ add dependencies on AngularJS:
 var app = angular.module('myModule', ['angular-cloud-endpoints']);
 ```
 
-# Configuration without google auth
+## Configuration
+### without Google Auth
 
 add run in root module
 
@@ -31,7 +32,7 @@ app.run(['GApi',
     }
 ]);
 ```
-### Configuration with google auth
+### with Google Auth
 
 add run in root module
 
