@@ -1,7 +1,7 @@
-Angular Cloud Endpoints
+Angular Google GApi
 =======================
 
-An AngularJS module for use Google Cloud Endpoints.
+An AngularJS module for use all Google Apis and your Google Cloud Endpoints.
 
 ## Requirements
 
@@ -18,7 +18,7 @@ Load the script files in your application:
 add dependencies on AngularJS:
 
 ```javascript
-var app = angular.module('myModule', ['angular-cloud-endpoints']);
+var app = angular.module('myModule', ['angular-google-gapi']);
 ```
 
 ## Configuration
