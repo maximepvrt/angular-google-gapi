@@ -1,7 +1,7 @@
 Angular Google GApi
 =======================
 
-An AngularJS module for use all Google Apis and your Google Cloud Endpoints.
+An AngularJS module for use all Google Apis and your Google Cloud Endpoints with OAuth.
 
 ## Requirements
 
