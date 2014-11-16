@@ -1,4 +1,4 @@
-var module = angular.module('angular-cloud-endpoints', []);
+var module = angular.module('angular-google-gapi', []);
 
 module.factory('GClient', ['$document', '$q', '$timeout', '$interval',
         function ($document, $q, $timeout, $interval) {
