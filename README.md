@@ -31,6 +31,7 @@ app.run(['GApi',
     function(GApi) {
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
         GApi.load('myApiName','v1',BASE);
+        GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
     }
 ]);
 ```
@@ -45,20 +46,21 @@ app.run(['GAuth', 'GApi', '$state',
         var CLIENT = 'yourGoogleAuthAPIKey';
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
 
+	GApi.load('myApiName','v1',BASE);
+
         GAuth.setClient(CLIENT);
-        GAuth.setLoginSuccess(function() {
-            $state.go('webapp.home');  // an example of action if it's possible to
-                                       // authenticate user at startup of the application
-        });
-        GAuth.setLoginFail(function() {
-            $state.go('webapp.login'); // an example of action if it's impossible to
-                                       // authenticate user at startup of the application
-        });
-        GAuth.load(function () {
-            GAuth.login(function () {
-                GApi.load('myApiName','v1',BASE);
-            });
-        });
+        
+        GAuth.checkAuth().then(
+            function () {
+                $state.go('webapp.home'); // an example of action if it's possible to
+                			  // authenticate user at startup of the application
+            },
+            function() {
+		$state.go('login');       // an example of action if it's impossible to
+					  // authenticate user at startup of the application
+            }
+        );
+        
     }
 ```
 
@@ -68,11 +70,10 @@ app.run(['GAuth', 'GApi', '$state',
 
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
-    function clientList($scope, GAuth) {
-      GApi.get('you.api.method.name', function(resp) {
-			  $scope.value = resp;
-        $scope.$apply($scope.value);
-		  });
+    function myController($scope, GApi) {
+      	GApi.execute('youApi', 'you.api.method.name', function(resp) {
+	    $scope.value = resp;
+	});
     }
 ]);
 ```
@@ -81,11 +82,34 @@ app.controller('myController', ['$scope', 'GApi',
 
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
-    function clientList($scope, GAuth) {
-      GApi.get('you.api.method.name', {alarmClockId: $localStorage.alarmClockId}, function(resp) {
-			  $scope.value = resp;
-        $scope.$apply($scope.value);
-		  });
+    function myController($scope, GApi) {
+	GApi.execute('youApi', 'you.api.method.name', {parm1: value}, function(resp) {
+	    $scope.value = resp;
+	});
+    }
+]);
+```
+
+### Execute your api without params with Google Auth
+
+```javascript
+app.controller('myController', ['$scope', 'GApi',
+    function myController($scope, GApi) {
+      	GApi.executeAuth('youApi', 'you.api.method.name', function(resp) {
+	    $scope.value = resp;
+	});
+    }
+]);
+```
+
+### Execute your api with params with Google Auth
+
+```javascript
+app.controller('myController', ['$scope', 'GApi',
+    function myController($scope, GApi) {
+	GApi.executeAuth('youApi', 'you.api.method.name', {parm1: value}, function(resp) {
+	    $scope.value = resp;
+	});
     }
 ]);
 ```
@@ -96,11 +120,13 @@ app.controller('myController', ['$scope', 'GApi',
 app.controller('myController', ['$scope', 'GAuth', '$state',
     function clientList($scope, GAuth, $state) {
         
-      $scope.doSingup = function() {
-        GAuth.signin(function(){
-          $state.go('webapp.home'); // action after the user have validated that
-                                    // your application can access their Google account.
-        });
+	$scope.doSingup = function() {
+      	    GAuth.login().then(function(){
+        	$state.go('webapp.home'); // action after the user have validated that
+        				  // your application can access their Google account.
+            }, function() {
+            	console.log('login fail');
+            });
       };
     }
 ]);
