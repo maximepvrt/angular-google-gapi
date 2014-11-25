@@ -119,7 +119,7 @@ app.controller('myController', ['$scope', 'GApi',
 
 ```javascript
 app.controller('myController', ['$scope', 'GAuth', '$state',
-    function clientList($scope, GAuth, $state) {
+    function myController($scope, GAuth, $state) {
         
 	$scope.doSingup = function() {
       	    GAuth.login().then(function(){
@@ -132,3 +132,27 @@ app.controller('myController', ['$scope', 'GAuth', '$state',
     }
 ]);
 ```
+
+### Get user info
+
+Get user info after login are very simple.
+
+```javascript
+app.controller('myController', ['$rootScope',
+    function myController($rootScope) {
+        console.log($rootScope.user)
+    }
+]);
+```
+
+```html
+<h1>{{user.name}}</h1>
+```
+User object : 
+ - user.email
+ - user.picture (url)
+ - user.id (Google id)
+ - user.name (Google account name or email if don't exist)
+ - user.link (link to Google+ page)
+
+
