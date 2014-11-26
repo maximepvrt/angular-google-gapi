@@ -72,8 +72,10 @@ app.run(['GAuth', 'GApi', '$state',
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
     function myController($scope, GApi) {
-      	GApi.execute('youApi', 'you.api.method.name', function(resp) {
+      	GApi.execute('youApi', 'you.api.method.name').then( function(resp) {
 	    $scope.value = resp;
+	}, function() {
+		console.log("error :(");
 	});
     }
 ]);
@@ -84,8 +86,10 @@ app.controller('myController', ['$scope', 'GApi',
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
     function myController($scope, GApi) {
-	GApi.execute('youApi', 'you.api.method.name', {parm1: value}, function(resp) {
+	GApi.execute('youApi', 'you.api.method.name', {parm1: value}).then( function(resp) {
 	    $scope.value = resp;
+	}, function() {
+		console.log("error :(");
 	});
     }
 ]);
@@ -96,8 +100,10 @@ app.controller('myController', ['$scope', 'GApi',
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
     function myController($scope, GApi) {
-      	GApi.executeAuth('youApi', 'you.api.method.name', function(resp) {
+      	GApi.executeAuth('youApi', 'you.api.method.name').then( function(resp) {
 	    $scope.value = resp;
+	}, function() {
+		console.log("error :(");
 	});
     }
 ]);
@@ -108,8 +114,10 @@ app.controller('myController', ['$scope', 'GApi',
 ```javascript
 app.controller('myController', ['$scope', 'GApi',
     function myController($scope, GApi) {
-	GApi.executeAuth('youApi', 'you.api.method.name', {parm1: value}, function(resp) {
+	GApi.executeAuth('youApi', 'you.api.method.name', {parm1: value}).then( function(resp) {
 	    $scope.value = resp;
+	}, function() {
+		console.log("error :(");
 	});
     }
 ]);
