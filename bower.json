@@ -1,7 +1,7 @@
 {
-  "name": "angular-cloud-gapi",
+  "name": "angular-google-gapi",
   "version": "0.1.0",
-  "homepage": "https://github.com/maximepvrt/angular-cloud-gapi",
+  "homepage": "https://github.com/maximepvrt/angular-google-gapi",
   "authors": [
     "maximepvrt <maximepvrt@gmail.com>"
   ],
