@@ -9,14 +9,18 @@ This module use [Google APIs Client Library for JavaScript](https://developers.g
 - ([AngularJS](http://angularjs.org))
 
 ## Installation
-### Loading
-Load the script files in your application:
+### Add library
+This module is available as bower package, install it with this command:
+
+```bash
+bower install angular-google-gapi
+```
+or you may download the [latest release](https://github.com/maximepvrt/angular-google-gapi/releases)
 
 ```html
-<script type="text/javascript" src="vendors/angular-cloud-endpoints-0.1.js"></script>
+<script type="text/javascript" src="vendors/angular-google-gapi.js"></script>
 ```
-
-add dependencies on AngularJS:
+### Add dependency
 
 ```javascript
 var app = angular.module('myModule', ['angular-google-gapi']);
