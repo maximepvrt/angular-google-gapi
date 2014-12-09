@@ -57,12 +57,12 @@ module.factory('GClient', ['$document', '$q', '$timeout', '$interval',
     }]);
 
 
-module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi',
-    function($rootScope, $q, GClient, GApi){
+module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval',
+    function($rootScope, $q, GClient, GApi, $interval){
         var isLoad = false;
 
         var CLIENT_ID;
-        var SCOPES = ['https://www.googleapis.com/auth/userinfo.email'];
+        var SCOPES = 'https://www.googleapis.com/auth/userinfo.email';
         var RESPONSE_TYPE = 'token id_token';
 
         function load(calback){
@@ -86,6 +86,49 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi',
                 gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: mode, response_type : RESPONSE_TYPE}, authorizeCallback);
             });
         }
+
+        function offline() {
+
+            var deferred = $q.defer();
+            var origin = window.location.protocol + "//" + window.location.hostname;
+            console.log(window.location.port);
+            if(window.location.port != "") {
+                origin = origin + ':' + window.location.port;
+            }
+            var win =  window.open('https://accounts.google.com/o/oauth2/auth?scope='+encodeURI(SCOPES)+'&redirect_uri=postmessage&response_type=code&client_id='+CLIENT_ID+'&access_type=offline&approval_prompt=force&origin='+origin, null, 'width=800, height=600'); 
+
+            window.addEventListener("message", getCode);
+
+            
+
+            function getCode(event) {
+                if (event.origin === "https://accounts.google.com") {
+                    var data = JSON.parse(event.data);
+                    window.removeEventListener("message", getCode);
+                    data = gup(data.a[0], 'code');
+                    if (data == undefined)
+                        deferred.reject();
+                    else
+                        deferred.resolve();
+
+                }
+            }
+
+            function gup(url, name) {
+                name = name.replace(/[[]/,"\[").replace(/[]]/,"\]");
+                var regexS = name+"=([^&#]*)";
+                var regex = new RegExp( regexS );
+                var results = regex.exec( url );
+                if( results == null )
+                    return undefined;
+                else
+                    return results[1];
+            }
+            
+            return deferred.promise;
+        }
+                   
+        
 
         function getUser() {
 
@@ -154,6 +197,26 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi',
                         deferred.reject();
                     });
                 });
+                return deferred.promise;
+            },
+
+            logout: function(){
+                var deferred = $q.defer();
+                load(function() {
+                    gapi.auth.setToken(null);
+                    GApi.isLogin(false);
+                    deferred.resolve();
+                });
+                return deferred.promise;
+            },
+
+            offline: function(){
+                var deferred = $q.defer();
+                offline().then( function(code){
+                        deferred.resolve(code);
+                    }, function(){
+                        deferred.reject();
+                    });
                 return deferred.promise;
             },
 
