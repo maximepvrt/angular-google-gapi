@@ -109,7 +109,7 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval',
                     if (data == undefined)
                         deferred.reject();
                     else
-                        deferred.resolve();
+                        deferred.resolve(data);
 
                 }
             }
