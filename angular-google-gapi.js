@@ -1,7 +1,7 @@
 var module = angular.module('angular-google-gapi', []);
 
-module.factory('GClient', ['$document', '$q', '$timeout', '$interval',
-        function ($document, $q, $timeout, $interval) {
+module.factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
+        function ($document, $q, $timeout, $interval, $window) {
 
         var LOAD_GAE_API = false;
         var URL = 'https://apis.google.com/js/client.js';
@@ -24,31 +24,29 @@ module.factory('GClient', ['$document', '$q', '$timeout', '$interval',
                 return deferred.promise;
         };
 
-        function load(calback) {
+        function load(callback) {
                 loadScript(URL).then(function() {
-                    var isok = function(calback) {
-                        if(gapi.client != undefined) {
-                            LOAD_GAE_API = true;
-                            calback();
+                    var isok = function(callback) {
+                        if($window.gapi.client != undefined) {
+                            callback();
                             $interval.cancel(check);
                         }
                     }
-                    isok(calback);
+                    isok(callback);
                     var check = $interval(function() {
-                        isok(calback);
+                        isok(callback);
                     }, 10);
                     LOAD_GAE_API = true;
-                    
                 });
         }
 
         return {
 
-            get: function(calback){
+            get: function(callback){
                 if(LOAD_GAE_API)
-                    calback();
+                    callback();
                 else
-                    load(calback);
+                    load(callback);
 
             }
 
@@ -57,54 +55,51 @@ module.factory('GClient', ['$document', '$q', '$timeout', '$interval',
     }]);
 
 
-module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval',
-    function($rootScope, $q, GClient, GApi, $interval){
+module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval', '$window', '$location',
+    function($rootScope, $q, GClient, GApi, $interval, $window){
         var isLoad = false;
 
         var CLIENT_ID;
         var SCOPES = 'https://www.googleapis.com/auth/userinfo.email';
         var RESPONSE_TYPE = 'token id_token';
 
-        function load(calback){
-                if (isLoad == false) {
-                    var args = arguments.length;
-                    GClient.get(function (){
-                       gapi.client.load('oauth2', 'v2', function() {
-                            isLoad = true;
-                            if (args == 1)
-                                calback();
-                        });
-                    });
-                } else {
-                    calback();
-                }  
+        function load(callback){
+             if (isLoad == false) {
+                 var args = arguments.length;
+                 GClient.get(function (){
+                    $window.gapi.client.load('oauth2', 'v2', function() {
+                         isLoad = true;
+                         if (args == 1)
+                             callback();
+                     });
+                 });
+             } else {
+                 callback();
+             }
 
-            }
+         }
 
         function signin(mode, authorizeCallback) {
             load(function (){
-                gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: mode, response_type : RESPONSE_TYPE}, authorizeCallback);
+                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: mode, response_type : RESPONSE_TYPE}, authorizeCallback);
             });
         }
 
         function offline() {
-
             var deferred = $q.defer();
-            var origin = window.location.protocol + "//" + window.location.hostname;
-            console.log(window.location.port);
-            if(window.location.port != "") {
-                origin = origin + ':' + window.location.port;
+            var origin = $location.protocol + "//" + $location.hostname;
+            console.log($location.port);
+            if($location.port != "") {
+                origin = origin + ':' + $location.port;
             }
-            var win =  window.open('https://accounts.google.com/o/oauth2/auth?scope='+encodeURI(SCOPES)+'&redirect_uri=postmessage&response_type=code&client_id='+CLIENT_ID+'&access_type=offline&approval_prompt=force&origin='+origin, null, 'width=800, height=600'); 
+            var win =  $window.open('https://accounts.google.com/o/oauth2/auth?scope='+encodeURI(SCOPES)+'&redirect_uri=postmessage&response_type=code&client_id='+CLIENT_ID+'&access_type=offline&approval_prompt=force&origin='+origin, null, 'width=800, height=600');
 
-            window.addEventListener("message", getCode);
-
-            
+            $window.addEventListener("message", getCode);
 
             function getCode(event) {
                 if (event.origin === "https://accounts.google.com") {
                     var data = JSON.parse(event.data);
-                    window.removeEventListener("message", getCode);
+                    $window.removeEventListener("message", getCode);
                     data = gup(data.a[0], 'code');
                     if (data == undefined)
                         deferred.reject();
@@ -124,16 +119,14 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval',
                 else
                     return results[1];
             }
-            
+
             return deferred.promise;
         }
-                   
-        
 
         function getUser() {
 
             var deferred = $q.defer();
-            gapi.client.oauth2.userinfo.get().execute(function(resp) {
+            $window.gapi.client.oauth2.userinfo.get().execute(function(resp) {
                 if (!resp.code) {
                     GApi.isLogin(true);
                     GApi.executeCallbacks();
@@ -165,12 +158,12 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval',
                 SCOPES = scopes;
             },
 
-            load: function(calback){
+            load: function(callback){
                 var args = arguments.length;
                 GClient.get(function (){
-                    gapi.client.load('oauth2', 'v2', function() {
+                    $window.gapi.client.load('oauth2', 'v2', function() {
                         if (args == 1)
-                            calback();
+                            callback();
                     });
                 });
 
@@ -203,7 +196,7 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval',
             logout: function(){
                 var deferred = $q.defer();
                 load(function() {
-                    gapi.auth.setToken(null);
+                    $window.gapi.auth.setToken(null);
                     GApi.isLogin(false);
                     deferred.resolve();
                 });
@@ -225,8 +218,8 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval',
 
     }]);
 
-module.factory('GApi', ['$q', 'GClient',
-    function($q, GClient){
+module.factory('GApi', ['$q', 'GClient', '$window',
+    function($q, GClient, $window){
 
         var isLogin = false;
         var apisLoad  = [];
@@ -246,7 +239,7 @@ module.factory('GApi', ['$q', 'GClient',
 
         function load(api, version, url) {
             GClient.get(function (){
-            gapi.client.load(api, version, function() {
+            $window.gapi.client.load(api, version, function() {
                 console.log(api+" "+version+" api loaded");
                 apisLoad.push(api);
                 executeCallbacks(api);
@@ -257,25 +250,25 @@ module.factory('GApi', ['$q', 'GClient',
         function executeCallbacks(api){
             var apiName = api;
 
-                for(var i= 0; i < observerCallbacks.length; i++){
-                    var observerCallback = observerCallbacks[i];
-                    if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || isLogin == true)) {
-                        runGapi(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
-                        if (i > -1) {
-                            observerCallbacks.splice(i--, 1);
-                        }
-                    } else {
-                        if (observerCallback.api == apiName)
-                            observerCallbacks[i]['apiLoad'] = true;
-                    }
-                };
+            for(var i= 0; i < observerCallbacks.length; i++){
+              var observerCallback = observerCallbacks[i];
+              if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || isLogin == true)) {
+                  runGapi(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
+                  if (i > -1) {
+                      observerCallbacks.splice(i--, 1);
+                  }
+              } else {
+                  if (observerCallback.api == apiName)
+                      observerCallbacks[i]['apiLoad'] = true;
+              }
+            };
 
         }
 
         function runGapi(api, method, params, deferred) {
 
             var pathMethod = method.split('.');
-            var api = gapi.client[api];
+            var api = $window.gapi.client[api];
             for(var i= 0; i < pathMethod.length; i++) {
                 api = api[pathMethod[i]];
             }
@@ -295,7 +288,7 @@ module.factory('GApi', ['$q', 'GClient',
             }
             else
                 registerObserverCallback(api, method, params, auth, deferred);
-            return deferred.promise; 
+            return deferred.promise;
         }
 
         return {
@@ -315,18 +308,17 @@ module.factory('GApi', ['$q', 'GClient',
             },
 
             execute: function(api, method, params){
-                if(arguments.length == 3)              
+                if(arguments.length == 3)
                     return execute(api, method, params, false);
                 if(arguments.length == 2)
                     return execute(api, method, null, false);
             },
 
             executeAuth: function(api, method, params){
-                if(arguments.length == 3)              
+                if(arguments.length == 3)
                     return execute(api, method, params, true);
                 if(arguments.length == 2)
                     return execute(api, method, null, true);
             },
         }
-
     }]);
