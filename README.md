@@ -147,7 +147,7 @@ app.controller('myController', ['$scope', 'GAuth', '$state',
 
 ### Get user info
 
-Get user info after login are very simple.
+Get user info after login is very simple.
 
 ```javascript
 app.controller('myController', ['$rootScope',
