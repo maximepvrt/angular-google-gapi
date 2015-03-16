@@ -1,7 +1,7 @@
 Angular Google GApi
 =======================
 
-An AngularJS module for use all Google Apis and your Google Cloud Endpoints (Google App Engine) with OAuth.
+An AngularJS module for use all Google Apis and your Google Cloud Endpoints with OAuth.
 This module use [Google APIs Client Library for JavaScript](https://developers.google.com/api-client-library/javascript/), available for all GApis.
 
 ## Requirements
