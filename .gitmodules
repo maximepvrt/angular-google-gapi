@@ -1,0 +1,4 @@
+[submodule "example"]
+	path = example
+	url = https://github.com/maximepvrt/angular-google-gapi.git
+	branch = gh-pages
