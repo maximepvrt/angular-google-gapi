@@ -54,9 +54,37 @@ module.factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window'
 
     }]);
 
+module.factory('GData', ['$rootScope',
+        function ($rootScope) {
 
-module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval', '$window', '$location',
-    function($rootScope, $q, GClient, GApi, $interval, $window){
+        $rootScope.gapi = {};
+
+        var isLogin = false;
+        var user = null;
+
+        return {
+
+            isLogin : function(value) {
+                if(arguments.length == 0)
+                    return isLogin;
+                isLogin = value;
+                $rootScope.gapi.login = value;
+            },
+
+            getUser : function(value) {
+                if(arguments.length == 0)
+                    return user;
+                user = value;
+                $rootScope.gapi.user = value;
+            }
+
+        }
+
+    }]);
+
+
+module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$window', '$location',
+    function($rootScope, $q, GClient, GApi, GData, $interval, $window){
         var isLoad = false;
 
         var CLIENT_ID;
@@ -128,18 +156,18 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval', '$w
             var deferred = $q.defer();
             $window.gapi.client.oauth2.userinfo.get().execute(function(resp) {
                 if (!resp.code) {
-                    GApi.isLogin(true);
+                    GData.isLogin(true);
                     GApi.executeCallbacks();
-                    $rootScope.user = {};
-                    $rootScope.user.email = resp.email;
-                    $rootScope.user.picture = resp.picture;
-                    $rootScope.user.id = resp.id;
+                    var user = {};
+                    user.email = resp.email;
+                    user.picture = resp.picture;
+                    user.id = resp.id;
                     if (resp.name == undefined)
-                        $rootScope.user.name = resp.email;
+                        user.name = resp.email;
                     else
-                        $rootScope.user.name = resp.name;
-                    $rootScope.user.link = resp.link;
-                    $rootScope.$apply($rootScope.user);
+                        user.name = resp.name;
+                    user.link = resp.link;
+                    GData.getUser(user);
                     deferred.resolve();
                 } else {
                     deferred.reject();
@@ -197,7 +225,8 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval', '$w
                 var deferred = $q.defer();
                 load(function() {
                     $window.gapi.auth.setToken(null);
-                    GApi.isLogin(false);
+                    GData.isLogin(false);
+                    GData.getUser(null);
                     deferred.resolve();
                 });
                 return deferred.promise;
@@ -218,10 +247,9 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', '$interval', '$w
 
     }]);
 
-module.factory('GApi', ['$q', 'GClient', '$window',
-    function($q, GClient, $window){
+module.factory('GApi', ['$q', 'GClient', 'GData', '$window',
+    function($q, GClient, GData, $window){
 
-        var isLogin = false;
         var apisLoad  = [];
 
         var observerCallbacks = [];
@@ -252,7 +280,7 @@ module.factory('GApi', ['$q', 'GClient', '$window',
 
             for(var i= 0; i < observerCallbacks.length; i++){
               var observerCallback = observerCallbacks[i];
-              if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || isLogin == true)) {
+              if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || GData.isLogin() == true)) {
                   runGapi(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
                   if (i > -1) {
                       observerCallbacks.splice(i--, 1);
@@ -292,12 +320,6 @@ module.factory('GApi', ['$q', 'GClient', '$window',
         }
 
         return {
-
-            isLogin : function(value) {
-                if(arguments.length == 0)
-                    return isLogin;
-                isLogin = value;
-            },
 
             executeCallbacks : function() {
                 executeCallbacks();
