@@ -152,13 +152,13 @@ Get user info after login is very simple.
 ```javascript
 app.controller('myController', ['$rootScope',
     function myController($rootScope) {
-        console.log($rootScope.user)
+        console.log($rootScope.gapi.user)
     }
 ]);
 ```
 
 ```html
-<h1>{{user.name}}</h1>
+<h1>{{gapi.user.name}}</h1>
 ```
 User object : 
  - user.email
