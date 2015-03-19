@@ -1,1 +1,6 @@
-<h1>{{name}}</h1>
+<button style="margin-bottom: 20px;" class="btn btn-default" type="submit" ui-sref="add">Add a new contact</button>
+<div class="well" ng-repeat="contact in contacts">
+	<h2>{{contact.firstName}} {{contact.lastName}}</h2>
+	<h3>{{contact.phoneNumber}}</h3>
+	<a href="" ui-sref="edit({ id: contact.id })">Edit this contact</a> - <a href="" ng-click="remove(contact)">Remove this contact</a>
+</div>

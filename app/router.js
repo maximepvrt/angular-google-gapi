@@ -34,4 +34,24 @@ router
                     },
                 })
 
+                .state('add', {
+                    url :'/add',
+                    views :  {
+                        '': {
+                            controller: 'angular-google-api-example.controller.add',
+                            templateUrl: 'partials/add.html',
+                        },
+                    },
+                })
+
+                .state('edit', {
+                    url :'/edit/{id}',
+                    views :  {
+                        '': {
+                            controller: 'angular-google-api-example.controller.edit',
+                            templateUrl: 'partials/edit.html',
+                        },
+                    },
+                })
+
     }])

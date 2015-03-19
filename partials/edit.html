@@ -1,0 +1,26 @@
+<button style="margin-bottom: 20px;" class="btn btn-default" type="submit" ui-sref="home">Back to home</button>
+
+<form class="form-horizontal" ng-submit="submitEdit()" name="editContact">
+<fieldset>
+
+<p>First Name</p>
+<!-- Text input-->
+<div class="input-group" ng-class="{'has-error' : !editContact.firstName.$valid}">
+  <input ng-model="contact.firstName" name="firstName" type="text" required class="form-control input-md">
+</div>
+
+<p>Last Name</p>
+<!-- Text input-->
+<div class="input-group" ng-class="{'has-error' : !editContact.lastName.$valid}">
+  <input ng-model="contact.lastName" name="lastName" type="text" required class="form-control input-md">
+</div>
+
+<p>Phone Number</p>
+<!-- Text input-->
+<div class="input-group" ng-class="{'has-error' : !editContact.phoneNumber.$valid}">
+  <input ng-model="contact.phoneNumber" name="phoneNumber" type="text" required class="form-control input-md">
+</div>
+
+<button style="margin-top: 20px;" type="submit" class="btn btn-white btn-rad btn-trans" ng-class="{'disabled' : !editContact.$valid}">Validate</button>
+</fieldset>
+</form>
