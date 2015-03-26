@@ -1,6 +1,4 @@
-var module = angular.module('angular-google-gapi', []);
-
-module.factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
+angular.module('angular-google-gapi', []).factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
         function ($document, $q, $timeout, $interval, $window) {
 
         var LOAD_GAE_API = false;
@@ -54,7 +52,7 @@ module.factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window'
 
     }]);
 
-module.factory('GData', ['$rootScope',
+angular.module('angular-google-gapi', []).factory('GData', ['$rootScope',
         function ($rootScope) {
 
         $rootScope.gapi = {};
@@ -83,7 +81,7 @@ module.factory('GData', ['$rootScope',
     }]);
 
 
-module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$window', '$location',
+angular.module('angular-google-gapi', []).factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$window', '$location',
     function($rootScope, $q, GClient, GApi, GData, $interval, $window){
         var isLoad = false;
 
@@ -247,7 +245,7 @@ module.factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$inter
 
     }]);
 
-module.factory('GApi', ['$q', 'GClient', 'GData', '$window',
+angular.module('angular-google-gapi', []).factory('GApi', ['$q', 'GClient', 'GData', '$window',
     function($q, GClient, GData, $window){
 
         var apisLoad  = [];
