@@ -1,4 +1,6 @@
-angular.module('angular-google-gapi', []).factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
+angular.module('angular-google-gapi', [])
+
+angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
         function ($document, $q, $timeout, $interval, $window) {
 
         var LOAD_GAE_API = false;
@@ -52,7 +54,7 @@ angular.module('angular-google-gapi', []).factory('GClient', ['$document', '$q',
 
     }]);
 
-angular.module('angular-google-gapi', []).factory('GData', ['$rootScope',
+angular.module('angular-google-gapi').factory('GData', ['$rootScope',
         function ($rootScope) {
 
         $rootScope.gapi = {};
@@ -81,7 +83,7 @@ angular.module('angular-google-gapi', []).factory('GData', ['$rootScope',
     }]);
 
 
-angular.module('angular-google-gapi', []).factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$window', '$location',
+angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$window', '$location',
     function($rootScope, $q, GClient, GApi, GData, $interval, $window){
         var isLoad = false;
 
@@ -245,7 +247,7 @@ angular.module('angular-google-gapi', []).factory('GAuth', ['$rootScope', '$q', 
 
     }]);
 
-angular.module('angular-google-gapi', []).factory('GApi', ['$q', 'GClient', 'GData', '$window',
+angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData', '$window',
     function($q, GClient, GData, $window){
 
         var apisLoad  = [];
@@ -265,11 +267,11 @@ angular.module('angular-google-gapi', []).factory('GApi', ['$q', 'GClient', 'GDa
 
         function load(api, version, url) {
             GClient.get(function (){
-            $window.gapi.client.load(api, version, function() {
-                console.log(api+" "+version+" api loaded");
-                apisLoad.push(api);
-                executeCallbacks(api);
-            }, url)
+                $window.gapi.client.load(api, version, function() {
+                    console.log(api+" "+version+" api loaded");
+                    apisLoad.push(api);
+                    executeCallbacks(api);
+                }, url)
             });
         }
 
