@@ -1,3 +1,9 @@
+/**
+ * An AngularJS module for use all Google Apis and your Google Cloud Endpoints
+ * @version v0.1.2
+ * @link https://github.com/maximepvrt/angular-google-gapi
+ */
+
 angular.module('angular-google-gapi', [])
 
 angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
