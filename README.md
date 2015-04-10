@@ -26,17 +26,23 @@ or you may download the [latest release](https://github.com/maximepvrt/angular-g
 var app = angular.module('myModule', ['angular-google-gapi']);
 ```
 
+## Example - demo
+
+An example is executed here : http://maximepvrt.github.io/angular-google-gapi/
+The code is available here : https://github.com/maximepvrt/angular-google-gapi/tree/gh-pages
+
 ## Configuration
 ### without Google Auth
 
 add run in root module
 
 ```javascript
-app.run(['GApi',
-    function(GApi) {
+app.run(['GApi', 'GAuth',
+    function(GApi, GAuth) {
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
         GApi.load('myApiName','v1',BASE);
         GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
+        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
     }
 ]);
 ```
