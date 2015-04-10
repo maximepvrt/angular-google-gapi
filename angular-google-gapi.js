@@ -94,7 +94,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
         var isLoad = false;
 
         var CLIENT_ID;
-        var SCOPES = 'https://www.googleapis.com/auth/userinfo.email';
+        var SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
         var RESPONSE_TYPE = 'token id_token';
 
         function load(callback){
@@ -115,7 +115,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
 
         function signin(mode, authorizeCallback) {
             load(function (){
-                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: mode, response_type : RESPONSE_TYPE}, authorizeCallback);
+                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPE, immediate: mode, response_type : RESPONSE_TYPE}, authorizeCallback);
             });
         }
 
@@ -126,7 +126,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
             if($location.port != "") {
                 origin = origin + ':' + $location.port;
             }
-            var win =  $window.open('https://accounts.google.com/o/oauth2/auth?scope='+encodeURI(SCOPES)+'&redirect_uri=postmessage&response_type=code&client_id='+CLIENT_ID+'&access_type=offline&approval_prompt=force&origin='+origin, null, 'width=800, height=600');
+            var win =  $window.open('https://accounts.google.com/o/oauth2/auth?scope='+encodeURI(SCOPE)+'&redirect_uri=postmessage&response_type=code&client_id='+CLIENT_ID+'&access_type=offline&approval_prompt=force&origin='+origin, null, 'width=800, height=600');
 
             $window.addEventListener("message", getCode);
 
@@ -188,8 +188,8 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 CLIENT_ID = client;
             },
 
-            setScopes: function(scopes) {
-                SCOPES = scopes;
+            setScope: function(scope) {
+                SCOPE = scope;
             },
 
             load: function(callback){
