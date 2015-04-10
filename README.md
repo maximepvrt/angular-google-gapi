@@ -7,6 +7,7 @@ This module use [Google APIs Client Library for JavaScript](https://developers.g
 ## Example
 
 An example is executed here : http://maximepvrt.github.io/angular-google-gapi/
+
 The code is available here : https://github.com/maximepvrt/angular-google-gapi/tree/gh-pages
 
 ## Requirements
