@@ -4,6 +4,11 @@ Angular Google GApi
 An AngularJS module for use all Google Apis and your Google Cloud Endpoints (Google App Engine) with OAuth.
 This module use [Google APIs Client Library for JavaScript](https://developers.google.com/api-client-library/javascript/), available for all GApis.
 
+## Example
+
+An example is executed here : http://maximepvrt.github.io/angular-google-gapi/
+The code is available here : https://github.com/maximepvrt/angular-google-gapi/tree/gh-pages
+
 ## Requirements
 
 - ([AngularJS](http://angularjs.org))
@@ -25,11 +30,6 @@ or you may download the [latest release](https://github.com/maximepvrt/angular-g
 ```javascript
 var app = angular.module('myModule', ['angular-google-gapi']);
 ```
-
-## Example - demo
-
-An example is executed here : http://maximepvrt.github.io/angular-google-gapi/
-The code is available here : https://github.com/maximepvrt/angular-google-gapi/tree/gh-pages
 
 ## Configuration
 ### without Google Auth
