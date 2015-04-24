@@ -22,7 +22,7 @@ app.run(['GAuth', 'GApi', '$state', '$rootScope', '$window',
         GApi.load('myContactApi', 'v1', BASE);
         GApi.load('calendar', 'v3');
         GAuth.setClient(CLIENT);
-        GAuth.setScopes('https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly');
+        GAuth.setScope('https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly');
         GAuth.checkAuth().then(
             function () {
                 if($state.includes('login'))
