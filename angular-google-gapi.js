@@ -122,7 +122,6 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
         function offline() {
             var deferred = $q.defer();
             var origin = $location.protocol + "//" + $location.hostname;
-            console.log($location.port);
             if($location.port != "") {
                 origin = origin + ':' + $location.port;
             }
@@ -229,11 +228,13 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
 
             setToken: function(token){
                 var deferred = $q.defer();
-                $window.gapi.auth.setToken(token);
-                getUser().then(function () {
-                    deferred.resolve();
-                }, function () {
-                    deferred.reject();
+                load(function (){
+                    $window.gapi.auth.setToken(token);
+                    getUser().then(function () {
+                        deferred.resolve();
+                    }, function () {
+                        deferred.reject();
+                    });
                 });
                 return deferred.promise;
             },
