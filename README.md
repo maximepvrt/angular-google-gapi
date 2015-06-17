@@ -12,7 +12,7 @@ The code is available here : https://github.com/maximepvrt/angular-google-gapi/t
 
 ## Requirements
 
-- ([AngularJS](http://angularjs.org))
+- [AngularJS](http://angularjs.org)
 
 ## Installation
 ### Add library
