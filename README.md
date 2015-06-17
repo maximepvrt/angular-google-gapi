@@ -43,7 +43,7 @@ app.run(['GApi', 'GAuth',
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
         GApi.load('myApiName','v1',BASE);
         GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
-        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
+        GAuth.setScopes("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
     }
 ]);
 ```
