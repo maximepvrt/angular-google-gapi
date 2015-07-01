@@ -4,7 +4,7 @@
  * @link https://github.com/maximepvrt/angular-google-gapi
  */
 
-angular.module('angular-google-gapi', [])
+angular.module('angular-google-gapi', ['ngCookies'])
 
 angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
         function ($document, $q, $timeout, $interval, $window) {
@@ -60,8 +60,8 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
 
     }]);
 
-angular.module('angular-google-gapi').factory('GData', ['$rootScope',
-        function ($rootScope) {
+angular.module('angular-google-gapi').factory('GData', ['$rootScope', '$cookies',
+        function ($rootScope, $cookies) {
 
         $rootScope.gapi = {};
 
@@ -82,6 +82,12 @@ angular.module('angular-google-gapi').factory('GData', ['$rootScope',
                     return user;
                 user = value;
                 $rootScope.gapi.user = value;
+                if(value !== null) {
+                  $cookies.put('userId', value.id);
+                } else {
+                  $cookies.remove('userId');
+                }
+
             }
 
         }
@@ -89,8 +95,8 @@ angular.module('angular-google-gapi').factory('GData', ['$rootScope',
     }]);
 
 
-angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$window', '$location',
-    function($rootScope, $q, GClient, GApi, GData, $interval, $window){
+angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$cookies', '$window', '$location',
+    function($rootScope, $q, GClient, GApi, GData, $interval, $cookies, $window){
         var isLoad = false;
 
         var CLIENT_ID;
@@ -114,8 +120,14 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
          }
 
         function signin(mode, authorizeCallback) {
+
             load(function (){
-                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPE, immediate: mode, response_type : RESPONSE_TYPE}, authorizeCallback);
+              if(mode) {
+                var userId = $cookies.get('userId');
+                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPE, immediate: true, authuser: -1, user_id: userId, response_type : RESPONSE_TYPE}, authorizeCallback);
+              } else {
+                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type : RESPONSE_TYPE}, authorizeCallback);
+              }
             });
         }
 
