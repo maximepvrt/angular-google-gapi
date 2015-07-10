@@ -11,6 +11,7 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
 
         var LOAD_GAE_API = false;
         var URL = 'https://apis.google.com/js/client.js';
+        var API_KEY = null;
 
         function loadScript(src) {
                 var deferred = $q.defer();
@@ -34,6 +35,7 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
                 loadScript(URL).then(function() {
                     var isok = function(callback) {
                         if($window.gapi.client != undefined) {
+                            $window.gapi.client.setApiKey(API_KEY)
                             callback();
                             $interval.cancel(check);
                         }
@@ -54,6 +56,17 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
                 else
                     load(callback);
 
+            },
+            
+            setApiKey: function(apiKey){
+                API_KEY = apiKey;
+                if(LOAD_GAE_API) {
+                    $window.gapi.client.setApiKey(API_KEY);
+                }
+            },
+            
+            getApiKey: function(){
+                return API_KEY;
             }
 
         }
@@ -225,7 +238,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 });
                 return deferred.promise;
             },
-
+            
             setToken: function(token){
                 var deferred = $q.defer();
                 load(function (){
@@ -238,7 +251,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 });
                 return deferred.promise;
             },
-
+            
             getToken: function(){
                 var deferred = $q.defer();
                 load(function (){
@@ -246,7 +259,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 });
                 return deferred.promise;
             },
-
+            
             logout: function(){
                 var deferred = $q.defer();
                 load(function() {
@@ -257,7 +270,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 });
                 return deferred.promise;
             },
-
+            
             offline: function(){
                 var deferred = $q.defer();
                 offline().then( function(code){
