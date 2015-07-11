@@ -12,7 +12,7 @@ The code is available here : https://github.com/maximepvrt/angular-google-gapi/t
 
 ## Requirements
 
-- ([AngularJS](http://angularjs.org))
+- [AngularJS](http://angularjs.org)
 
 ## Installation
 ### Add library
@@ -24,7 +24,7 @@ bower install angular-google-gapi
 or you may download the [latest release](https://github.com/maximepvrt/angular-google-gapi/releases)
 
 ```html
-<script type="text/javascript" src="vendors/angular-google-gapi.js"></script>
+<script type="text/javascript" src="vendors/angular-google-gapi.min.js"></script>
 ```
 ### Add dependency
 
