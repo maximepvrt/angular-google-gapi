@@ -214,6 +214,19 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 return deferred.promise;
             },
 
+            setApiKey: function(apiKey){
+                var deferred = $q.defer();
+                load(function (){
+                    $window.gapi.client.setApiKey(apiKey);
+                    getUser().then(function () {
+                        deferred.resolve();
+                    }, function () {
+                        deferred.reject();
+                    });
+                });
+                return deferred.promise;
+            },
+
             login: function(){
                 var deferred = $q.defer();
                 signin(false, function() {
