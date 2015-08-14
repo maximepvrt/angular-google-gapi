@@ -109,7 +109,7 @@ angular.module('angular-google-gapi').factory('GData', ['$rootScope', '$cookies'
 
 
 angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$cookies', '$window', '$location',
-    function($rootScope, $q, GClient, GApi, GData, $interval, $cookies, $window){
+    function($rootScope, $q, GClient, GApi, GData, $interval, $cookies, $window, $location){
         var isLoad = false;
 
         var CLIENT_ID;
