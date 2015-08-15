@@ -1,0 +1,112 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/marsch/.nvm/v0.10.36/bin/node',
+1 verbose cli   '/Users/marsch/.nvm/v0.10.36/bin/npm',
+1 verbose cli   'publish',
+1 verbose cli   '--force' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.36
+4 warn using --force I sure hope you know what you are doing.
+5 verbose publish [ '.' ]
+6 verbose cache add [ '.', null ]
+7 verbose cache add name=undefined spec="." args=[".",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: '.',
+8 verbose parsed url   path: '.',
+8 verbose parsed url   href: '.' }
+9 silly lockFile 3a52ce78- .
+10 verbose lock . /Users/marsch/.npm/3a52ce78-.lock
+11 verbose tar pack [ '/Users/marsch/.npm/angular-google-gapi/0.1.3/package.tgz',
+11 verbose tar pack   '.' ]
+12 verbose tarball /Users/marsch/.npm/angular-google-gapi/0.1.3/package.tgz
+13 verbose folder .
+14 info prepublish angular-google-gapi@0.1.3
+15 silly lockFile 1f1177db-tar tar://.
+16 verbose lock tar://. /Users/marsch/.npm/1f1177db-tar.lock
+17 silly lockFile d66fa852-ar-google-gapi-0-1-3-package-tgz tar:///Users/marsch/.npm/angular-google-gapi/0.1.3/package.tgz
+18 verbose lock tar:///Users/marsch/.npm/angular-google-gapi/0.1.3/package.tgz /Users/marsch/.npm/d66fa852-ar-google-gapi-0-1-3-package-tgz.lock
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile 1f1177db-tar tar://.
+21 silly lockFile d66fa852-ar-google-gapi-0-1-3-package-tgz tar:///Users/marsch/.npm/angular-google-gapi/0.1.3/package.tgz
+22 silly lockFile d66fa852-ar-google-gapi-0-1-3-package-tgz tar:///Users/marsch/.npm/angular-google-gapi/0.1.3/package.tgz
+23 silly lockFile 4aa65eed-ngular-google-gapi-0-1-3-package /Users/marsch/.npm/angular-google-gapi/0.1.3/package
+24 verbose lock /Users/marsch/.npm/angular-google-gapi/0.1.3/package /Users/marsch/.npm/4aa65eed-ngular-google-gapi-0-1-3-package.lock
+25 silly lockFile 4aa65eed-ngular-google-gapi-0-1-3-package /Users/marsch/.npm/angular-google-gapi/0.1.3/package
+26 silly lockFile 4aa65eed-ngular-google-gapi-0-1-3-package /Users/marsch/.npm/angular-google-gapi/0.1.3/package
+27 silly lockFile 3a52ce78- .
+28 silly lockFile 3a52ce78- .
+29 silly publish { name: 'angular-google-gapi',
+29 silly publish   version: '0.1.3',
+29 silly publish   description: 'An AngularJS module for use all Google Apis and your Google Cloud Endpoints (Google App Engine) with OAuth. This module use Google APIs Client Library for JavaScript, available for all GApis.',
+29 silly publish   main: 'angular-google-gapi.min.js',
+29 silly publish   directories: { example: 'example' },
+29 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+29 silly publish   repository:
+29 silly publish    { type: 'git',
+29 silly publish      url: 'https://github.com/maximepvrt/angular-google-gapi' },
+29 silly publish   keywords:
+29 silly publish    [ 'google apis',
+29 silly publish      'google api',
+29 silly publish      'google app engine',
+29 silly publish      'gae',
+29 silly publish      'google cloud endpoints',
+29 silly publish      'angular.js' ],
+29 silly publish   author: { name: 'Mario Scheliga', email: 'marsch.js@gmail.com' },
+29 silly publish   license: 'MIT',
+29 silly publish   bugs: { url: 'https://github.com/maximepvrt/angular-google-gapi/issues' },
+29 silly publish   homepage: 'https://github.com/maximepvrt/angular-google-gapi',
+29 silly publish   readme: 'Angular Google GApi\n=======================\n\nAn AngularJS module for use all Google Apis and your Google Cloud Endpoints (Google App Engine) with OAuth.\nThis module use [Google APIs Client Library for JavaScript](https://developers.google.com/api-client-library/javascript/), available for all GApis.\n\n## Example\n\nAn example is executed here : http://maximepvrt.github.io/angular-google-gapi/\n\nThe code is available here : https://github.com/maximepvrt/angular-google-gapi/tree/gh-pages\n\n## Requirements\n\n- [AngularJS](http://angularjs.org)\n\n## Installation\n### Add library\nThis module is available as bower package, install it with this command:\n\n```bash\nbower install angular-google-gapi\n```\nor you may download the [latest release](https://github.com/maximepvrt/angular-google-gapi/releases)\n\n```html\n<script type="text/javascript" src="vendors/angular-google-gapi.min.js"></script>\n```\n### Add dependency\n\n```javascript\nvar app = angular.module(\'myModule\', [\'angular-google-gapi\']);\n```\n\n## Configuration\n### without Google Auth\n\nadd run in root module\n\n```javascript\napp.run([\'GApi\', \'GAuth\',\n    function(GApi, GAuth) {\n        var BASE = \'https://myGoogleAppEngine.appspot.com/_ah/api\';\n        GApi.load(\'myApiName\',\'v1\',BASE);\n        GApi.load(\'calendar\',\'v3\'); // for google api (https://developers.google.com/apis-explorer/)\n        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email\n    }\n]);\n```\n### with Google Auth\n\nadd run in root module\n\n```javascript\napp.run([\'GAuth\', \'GApi\', \'$state\',\n    function(GAuth, GApi, $state) {\n\n        var CLIENT = \'yourGoogleAuthAPIKey\';\n        var BASE = \'https://myGoogleAppEngine.appspot.com/_ah/api\';\n\n\tGApi.load(\'myApiName\',\'v1\',BASE);\n\n        GAuth.setClient(CLIENT);\n        \n        GAuth.checkAuth().then(\n            function () {\n                $state.go(\'webapp.home\'); // an example of action if it\'s possible to\n                \t\t\t  // authenticate user at startup of the application\n            },\n            function() {\n\t\t$state.go(\'login\');       // an example of action if it\'s impossible to\n\t\t\t\t\t  // authenticate user at startup of the application\n            }\n        );\n        \n    }\n```\n\n## Use\n\n### Execute your api without params\n\n```javascript\napp.controller(\'myController\', [\'$scope\', \'GApi\',\n    function myController($scope, GApi) {\n      \tGApi.execute(\'youApi\', \'you.api.method.name\').then( function(resp) {\n\t    $scope.value = resp;\n\t}, function() {\n\t\tconsole.log("error :(");\n\t});\n    }\n]);\n```\n\n### Execute your api with params\n\n```javascript\napp.controller(\'myController\', [\'$scope\', \'GApi\',\n    function myController($scope, GApi) {\n\tGApi.execute(\'youApi\', \'you.api.method.name\', {parm1: value}).then( function(resp) {\n\t    $scope.value = resp;\n\t}, function() {\n\t\tconsole.log("error :(");\n\t});\n    }\n]);\n```\n\n### Execute your api without params with Google Auth\n\n```javascript\napp.controller(\'myController\', [\'$scope\', \'GApi\',\n    function myController($scope, GApi) {\n      \tGApi.executeAuth(\'youApi\', \'you.api.method.name\').then( function(resp) {\n\t    $scope.value = resp;\n\t}, function() {\n\t\tconsole.log("error :(");\n\t});\n    }\n]);\n```\n\n### Execute your api with params with Google Auth\n\n```javascript\napp.controller(\'myController\', [\'$scope\', \'GApi\',\n    function myController($scope, GApi) {\n\tGApi.executeAuth(\'youApi\', \'you.api.method.name\', {parm1: value}).then( function(resp) {\n\t    $scope.value = resp;\n\t}, function() {\n\t\tconsole.log("error :(");\n\t});\n    }\n]);\n```\n\n### Signup with google\n\n```javascript\napp.controller(\'myController\', [\'$scope\', \'GAuth\', \'$state\',\n    function myController($scope, GAuth, $state) {\n        \n\t$scope.doSingup = function() {\n      \t    GAuth.login().then(function(){\n        \t$state.go(\'webapp.home\'); // action after the user have validated that\n        \t\t\t\t  // your application can access their Google account.\n            }, function() {\n            \tconsole.log(\'login fail\');\n            });\n      };\n    }\n]);\n```\n\n### Get user info\n\nGet user info after login is very simple.\n\n```javascript\napp.controller(\'myController\', [\'$rootScope\',\n    function myController($rootScope) {\n        console.log($rootScope.gapi.user)\n    }\n]);\n```\n\n```html\n<h1>{{gapi.user.name}}</h1>\n```\nUser object : \n - user.email\n - user.picture (url)\n - user.id (Google id)\n - user.name (Google account name or email if don\'t exist)\n - user.link (link to Google+ page)\n\n\n',
+29 silly publish   readmeFilename: 'README.md',
+29 silly publish   gitHead: '5c85e509d522bf2b4e34a0e02ebec44ded084acd',
+29 silly publish   _id: 'angular-google-gapi@0.1.3',
+29 silly publish   _shasum: '81d8f205e5ec8a737122082fda10f9de55b7bcea',
+29 silly publish   _from: '.' }
+30 verbose request where is /angular-google-gapi
+31 verbose request registry https://registry.npmjs.org/
+32 verbose request id 46f10c6a7f079a99
+33 verbose url raw /angular-google-gapi
+34 verbose url resolving [ 'https://registry.npmjs.org/', './angular-google-gapi' ]
+35 verbose url resolved https://registry.npmjs.org/angular-google-gapi
+36 verbose request where is https://registry.npmjs.org/angular-google-gapi
+37 info trying registry request attempt 1 at 16:16:40
+38 http PUT https://registry.npmjs.org/angular-google-gapi
+39 http 403 https://registry.npmjs.org/angular-google-gapi
+40 verbose headers { 'content-type': 'application/json',
+40 verbose headers   'cache-control': 'max-age=60',
+40 verbose headers   'content-length': '128',
+40 verbose headers   'accept-ranges': 'bytes',
+40 verbose headers   date: 'Sat, 15 Aug 2015 14:16:44 GMT',
+40 verbose headers   via: '1.1 varnish',
+40 verbose headers   connection: 'keep-alive',
+40 verbose headers   'x-served-by': 'cache-fra1222-FRA',
+40 verbose headers   'x-cache': 'MISS',
+40 verbose headers   'x-cache-hits': '0',
+40 verbose headers   'x-timer': 'S1439648202.924895,VS0,VE1551' }
+41 error publish Failed PUT 403
+42 error Error: "You cannot publish over the previously published version 0.1.3. Try bumping the version to 1.0.0" : angular-google-gapi
+42 error     at RegClient.<anonymous> (/Users/marsch/.nvm/v0.10.36/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:308:14)
+42 error     at Request._callback (/Users/marsch/.nvm/v0.10.36/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:246:65)
+42 error     at Request.self.callback (/Users/marsch/.nvm/v0.10.36/lib/node_modules/npm/node_modules/request/request.js:236:22)
+42 error     at Request.emit (events.js:98:17)
+42 error     at Request.<anonymous> (/Users/marsch/.nvm/v0.10.36/lib/node_modules/npm/node_modules/request/request.js:1142:14)
+42 error     at Request.emit (events.js:117:20)
+42 error     at IncomingMessage.<anonymous> (/Users/marsch/.nvm/v0.10.36/lib/node_modules/npm/node_modules/request/request.js:1096:12)
+42 error     at IncomingMessage.emit (events.js:117:20)
+42 error     at _stream_readable.js:944:16
+42 error     at process._tickCallback (node.js:442:13)
+43 error If you need help, you may report this *entire* log,
+43 error including the npm and node versions, at:
+43 error     <http://github.com/npm/npm/issues>
+44 error System Darwin 14.3.0
+45 error command "/Users/marsch/.nvm/v0.10.36/bin/node" "/Users/marsch/.nvm/v0.10.36/bin/npm" "publish" "--force"
+46 error cwd /Users/marsch/DEV/contribution/angular-google-gapi
+47 error node -v v0.10.36
+48 error npm -v 1.4.28
+49 verbose exit [ 1, true ]
