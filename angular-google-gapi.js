@@ -112,6 +112,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
         var isLoad = false;
 
         var CLIENT_ID;
+        var DOMAIN = undefined;
         var SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
         var RESPONSE_TYPE = 'token id_token';
 
@@ -134,12 +135,16 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
         function signin(mode, authorizeCallback) {
 
             load(function (){
+              var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
               if(mode) {
-                var userId = $cookies.get('userId');
-                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPE, immediate: true, authuser: -1, user_id: userId, response_type : RESPONSE_TYPE}, authorizeCallback);
+                config.user_id = $cookies.get('userId');
+                config.immediate = true;
               } else {
-                $window.gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type : RESPONSE_TYPE}, authorizeCallback);
+                config.immediate = false;
               }
+              if(DOMAIN != undefined)
+                config.hd = DOMAIN;
+              $window.gapi.auth.authorize(config, authorizeCallback);
             });
         }
 
@@ -211,6 +216,10 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 CLIENT_ID = client;
             },
 
+            setDomain: function(domain) {
+                DOMAIN = domain;
+            },
+
             setScope: function(scope) {
                 SCOPE = scope;
             },
@@ -231,7 +240,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 var deferred = $q.defer();
                 signin(false, function() {
                     getUser().then(function (user) {
-                        deferred.resolve(user);
+                        deferred.resolve();
                     }, function () {
                         deferred.reject();
                     });
