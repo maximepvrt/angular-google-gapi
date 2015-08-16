@@ -94,7 +94,6 @@ angular.module('angular-google-gapi').factory('GData', ['$rootScope', '$cookies'
                 if(arguments.length == 0)
                     return user;
                 user = value;
-                $rootScope.gapi.user = value;
                 if(value !== null) {
                   $cookies.put('userId', value.id);
                 } else {
@@ -192,13 +191,13 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                     user.email = resp.email;
                     user.picture = resp.picture;
                     user.id = resp.id;
-                    if (resp.name == undefined)
+                    if (!resp.name || 0 === resp.name.length)
                         user.name = resp.email;
                     else
                         user.name = resp.name;
                     user.link = resp.link;
                     GData.getUser(user);
-                    deferred.resolve();
+                    deferred.resolve(user);
                 } else {
                     deferred.reject();
                 }
@@ -216,22 +215,11 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 SCOPE = scope;
             },
 
-            load: function(callback){
-                var args = arguments.length;
-                GClient.get(function (){
-                    $window.gapi.client.load('oauth2', 'v2', function() {
-                        if (args == 1)
-                            callback();
-                    });
-                });
-
-            },
-
             checkAuth: function(){
                 var deferred = $q.defer();
                 signin(true, function() {
-                    getUser().then(function () {
-                        deferred.resolve();
+                    getUser().then(function (user) {
+                        deferred.resolve(user);
                     }, function () {
                         deferred.reject();
                     });
@@ -242,8 +230,8 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
             login: function(){
                 var deferred = $q.defer();
                 signin(false, function() {
-                    getUser().then(function () {
-                        deferred.resolve();
+                    getUser().then(function (user) {
+                        deferred.resolve(user);
                     }, function () {
                         deferred.reject();
                     });

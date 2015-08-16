@@ -12,7 +12,8 @@ The code is available here : https://github.com/maximepvrt/angular-google-gapi/t
 
 ## Requirements
 
-- [AngularJS](http://angularjs.org)
+- ([Angular.js](http://angularjs.org))
+- ([Angular-cookies.js](https://docs.angularjs.org/api/ngCookies))
 
 ## Installation
 ### Add library
@@ -52,23 +53,26 @@ app.run(['GApi', 'GAuth',
 add run in root module
 
 ```javascript
-app.run(['GAuth', 'GApi', '$state',
-    function(GAuth, GApi, $state) {
+app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
+    function(GAuth, GApi, Gdata, $state, $rootScope) {
+
+        $rootScope.gdata = GData;
 
         var CLIENT = 'yourGoogleAuthAPIKey';
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
 
-	GApi.load('myApiName','v1',BASE);
+	    GApi.load('myApiName','v1',BASE);
 
         GAuth.setClient(CLIENT);
         
         GAuth.checkAuth().then(
-            function () {
+            function (user) {
+                console.log(user.name + 'is login')
                 $state.go('webapp.home'); // an example of action if it's possible to
                 			  // authenticate user at startup of the application
             },
             function() {
-		$state.go('login');       // an example of action if it's impossible to
+		        $state.go('login');       // an example of action if it's impossible to
 					  // authenticate user at startup of the application
             }
         );
@@ -141,8 +145,9 @@ app.controller('myController', ['$scope', 'GAuth', '$state',
     function myController($scope, GAuth, $state) {
         
 	$scope.doSingup = function() {
-      	    GAuth.login().then(function(){
-        	$state.go('webapp.home'); // action after the user have validated that
+      	    GAuth.login().then(function(user){
+                console.log(user.name + 'is login')
+        	    $state.go('webapp.home'); // action after the user have validated that
         				  // your application can access their Google account.
             }, function() {
             	console.log('login fail');
@@ -159,13 +164,13 @@ Get user info after login is very simple.
 ```javascript
 app.controller('myController', ['$rootScope',
     function myController($rootScope) {
-        console.log($rootScope.gapi.user)
+        console.log($rootScope.gdata.getUser().name)
     }
 ]);
 ```
 
 ```html
-<h1>{{gapi.user.name}}</h1>
+<h1>{{gdata.getUser().name}}</h1>
 ```
 User object : 
  - user.email
