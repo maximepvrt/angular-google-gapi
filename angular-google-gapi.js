@@ -319,14 +319,20 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
 
         }
 
-        function runGapi(api, method, params, deferred) {
-
+        function createRequest(api, method, params) {
             var pathMethod = method.split('.');
             var api = $window.gapi.client[api];
             for(var i= 0; i < pathMethod.length; i++) {
                 api = api[pathMethod[i]];
             }
-            api(params).execute(function (response) {
+            return api(params);
+        }
+
+        function runGapi(api, method, params, deferred) {
+
+            var request = createRequest(api, method, params);
+
+            request.execute(function (response) {
                 if (response.error) {
                     deferred.reject(response);
                 } else {
@@ -351,9 +357,9 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
                 executeCallbacks();
             },
 
-            load: function(name, version, url){
-                load(name, version, url);
-            },
+            load: load,
+
+            createRequest: createRequest,
 
             execute: function(api, method, params){
                 if(arguments.length == 3)
