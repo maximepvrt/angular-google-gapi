@@ -238,13 +238,21 @@ module.factory('GApi', ['$q', 'GClient', '$window',
         };
 
         function load(api, version, url) {
+            var deferred = $q.defer();
             GClient.get(function (){
-            $window.gapi.client.load(api, version, function() {
-                console.log(api+" "+version+" api loaded");
-                apisLoad.push(api);
-                executeCallbacks(api);
-            }, url)
+                $window.gapi.client.load(api, version, undefined, url)
+                    .then(function(response) {
+                        if(response && response.hasOwnProperty('error')) {
+                            deferred.reject(api, version);
+                        } else {
+                            console.log(api+" "+version+" api loaded");
+                            apisLoad.push(api);
+                            executeCallbacks(api);
+                            deferred.resolve();
+                        }
+                    });
             });
+            return deferred.promise;
         }
 
         function executeCallbacks(api){
@@ -304,7 +312,7 @@ module.factory('GApi', ['$q', 'GClient', '$window',
             },
 
             load: function(name, version, url){
-                load(name, version, url);
+                return load(name, version, url);
             },
 
             execute: function(api, method, params){

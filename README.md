@@ -69,6 +69,15 @@ app.run(['GAuth', 'GApi', '$state',
     }
 ```
 
+### GApi.load Error handling
+
+```javascript
+GApi.load('myApiName','v1',BASE)
+    .catch(function(api, version) {
+        console.log('an error occured during loading api: ' + api + ', version: ' + version);
+    });
+```
+
 ## Use
 
 ### Execute your api without params
