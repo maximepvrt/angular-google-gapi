@@ -1,6 +1,6 @@
 {
   "name": "angular-google-gapi",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Angular Google GApi =======================",
   "main": "angular-google-gapi.js",
   "directories": {
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devillex/angular-google-gapi.git"
+    "url": "git+https://github.com/maximepvrt/angular-google-gapi.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Maxime Pauvert",
+  "license": "",
   "bugs": {
-    "url": "https://github.com/devillex/angular-google-gapi/issues"
+    "url": "https://github.com/maximepvrt/angular-google-gapi/issues"
   },
-  "homepage": "https://github.com/devillex/angular-google-gapi#readme",
+  "homepage": "https://github.com/maximepvrt/angular-google-gapi#readme",
   "devDependencies": {
     "del": "^2.0.2",
     "gulp": "^3.9.0",
