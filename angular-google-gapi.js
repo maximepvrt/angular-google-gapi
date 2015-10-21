@@ -307,7 +307,7 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
             for(var i= 0; i < observerCallbacks.length; i++){
               var observerCallback = observerCallbacks[i];
               if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || GData.isLogin() == true)) {
-                  runExecute(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
+                  runGapi(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
                   if (i > -1) {
                       observerCallbacks.splice(i--, 1);
                   }
@@ -319,7 +319,7 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
 
         }
 
-        function runExecute(api, method, params, deferred) {
+        function runGapi(api, method, params, deferred) {
 
             var pathMethod = method.split('.');
             var api = $window.gapi.client[api];
@@ -338,15 +338,11 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
         function execute(api, method, params, auth) {
             var deferred = $q.defer();
             if (apisLoad.indexOf(api) > -1) {
-                runExecute(api, method, params, deferred);
+                runGapi(api, method, params, deferred);
             }
             else
                 registerObserverCallback(api, method, params, auth, deferred);
             return deferred.promise;
-        }
-
-        function request(args) {
-            return $window.gapi.client.request(args)
         }
 
         return {
@@ -372,17 +368,5 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
                 if(arguments.length == 2)
                     return execute(api, method, null, true);
             },
-
-            request: function(args){
-                return request(args);
-            },
-            
-            setApiKey: function (apiKey) {
-                $window.gapi.client.setApiKey(apiKey);
-            },
-
-            getGapi: function() {
-                return $window.gapi;
-            }
         }
     }]);
