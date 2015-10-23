@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/maximepvrt/angular-google-gapi/issues"
   },
-  "homepage": "https://github.com/maximepvrt/angular-google-gapi"
+  "homepage": "https://github.com/maximepvrt/angular-google-gapi",
   "devDependencies": {
     "del": "^2.0.2",
     "gulp": "^3.9.0",
