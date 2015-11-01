@@ -179,4 +179,8 @@ User object :
  - user.name (Google account name or email if don't exist)
  - user.link (link to Google+ page)
 
+## Development
 
+Gulp is used to minify angular-google-gapi.js (using Uglify). Execute 'npm install' (requires Node and NPM) to install the required packages.
+
+Run "gulp" to generate a minified version (angular-google-gapi.min.js). Note that this requires gulp to be installed globally (via 'npm install -g gulp').
