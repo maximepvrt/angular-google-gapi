@@ -12,8 +12,8 @@ The code is available here : https://github.com/maximepvrt/angular-google-gapi/t
 
 ## Requirements
 
-- ([Angular.js](http://angularjs.org))
-- ([Angular-cookies.js](https://docs.angularjs.org/api/ngCookies))
+- [Angular.js](http://angularjs.org)
+- [Angular-cookies.js](https://docs.angularjs.org/api/ngCookies)
 
 ## Installation
 ### Add library
@@ -64,7 +64,7 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
 	    GApi.load('myApiName','v1',BASE);
 
         GAuth.setClient(CLIENT);
-        
+
         GAuth.checkAuth().then(
             function (user) {
                 console.log(user.name + 'is login')
@@ -76,7 +76,7 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
 					  // authenticate user at startup of the application
             }
         );
-        
+
     }
 ```
 
@@ -143,7 +143,7 @@ app.controller('myController', ['$scope', 'GApi',
 ```javascript
 app.controller('myController', ['$scope', 'GAuth', '$state',
     function myController($scope, GAuth, $state) {
-        
+
 	$scope.doSingup = function() {
       	    GAuth.login().then(function(user){
                 console.log(user.name + 'is login')
@@ -172,11 +172,9 @@ app.controller('myController', ['$rootScope',
 ```html
 <h1>{{gdata.getUser().name}}</h1>
 ```
-User object : 
+User object :
  - user.email
  - user.picture (url)
  - user.id (Google id)
  - user.name (Google account name or email if don't exist)
  - user.link (link to Google+ page)
-
-
