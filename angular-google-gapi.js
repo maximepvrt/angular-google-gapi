@@ -1,26 +1,26 @@
 /**
  * An AngularJS module for use all Google Apis and your Google Cloud Endpoints
- * @version v0.1.2
+ * @version 1.0.0-SNAPSHOT
  * @link https://github.com/maximepvrt/angular-google-gapi
  */
 
 angular.module('angular-google-gapi', ['ngCookies'])
 
-angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$timeout', '$interval', '$window',
-        function ($document, $q, $timeout, $interval, $window) {
+angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$window',
+        function ($document, $q, $window) {
 
         var LOAD_GAE_API = false;
-        var URL = 'https://apis.google.com/js/client.js';
+        var LOADING_GAE_API = false;
+        var URL = 'https://apis.google.com/js/client.js?onload=_gapiOnLoad';
         var API_KEY = null;
+        var OBSERVER_CALLBACKS  = [];
 
         function loadScript(src) {
                 var deferred = $q.defer();
+                $window._gapiOnLoad = function(){
+                  deferred.resolve();
+                }
                 var script = $document[0].createElement('script');
-                script.onload = function (e) {
-                    $timeout(function () {
-                        deferred.resolve(e);
-                    });
-                };
                 script.onerror = function (e) {
                     $timeout(function () {
                         deferred.reject(e);
@@ -31,40 +31,38 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
                 return deferred.promise;
         };
 
-        function load(callback) {
-                loadScript(URL).then(function() {
-                    var isok = function(callback) {
-                        if($window.gapi.client != undefined) {
-                            $window.gapi.client.setApiKey(API_KEY)
-                            callback();
-                            $interval.cancel(check);
-                        }
-                    }
-                    isok(callback);
-                    var check = $interval(function() {
-                        isok(callback);
-                    }, 10);
-                    LOAD_GAE_API = true;
-                });
-        }
-
         return {
 
-            get: function(callback){
+            get: function(){
+                var deferred = $q.defer();
                 if(LOAD_GAE_API)
-                    callback();
-                else
-                    load(callback);
-
+                    deferred.resolve();
+                else {
+                  if(LOADING_GAE_API) {
+                    OBSERVER_CALLBACKS.push(deferred);
+                  } else {
+                    LOADING_GAE_API = true;
+                    loadScript(URL).then(function() {
+                      $window.gapi.client.setApiKey(API_KEY)
+                      LOAD_GAE_API = true;
+                      LOADING_GAE_API = false;
+                      deferred.resolve();
+                      for(var i= 0; i < OBSERVER_CALLBACKS.length; i++){
+                        OBSERVER_CALLBACKS[i].resolve();
+                      }
+                    });
+                  }
+                }
+                return deferred.promise;
             },
-            
+
             setApiKey: function(apiKey){
                 API_KEY = apiKey;
                 if(LOAD_GAE_API) {
                     $window.gapi.client.setApiKey(API_KEY);
                 }
             },
-            
+
             getApiKey: function(){
                 return API_KEY;
             }
@@ -107,8 +105,8 @@ angular.module('angular-google-gapi').factory('GData', ['$rootScope', '$cookies'
     }]);
 
 
-angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$cookies', '$window', '$location',
-    function($rootScope, $q, GClient, GApi, GData, $interval, $cookies, $window, $location){
+angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$cookies', '$window', '$location', '$q',
+    function($rootScope, $q, GClient, GApi, GData, $interval, $cookies, $window, $location, $q){
         var isLoad = false;
 
         var CLIENT_ID;
@@ -116,25 +114,24 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
         var SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
         var RESPONSE_TYPE = 'token id_token';
 
-        function load(callback){
+        function load(){
+        	 var deferred = $q.defer();
              if (isLoad == false) {
-                 var args = arguments.length;
-                 GClient.get(function (){
+                 GClient.get().then(function (){
                     $window.gapi.client.load('oauth2', 'v2', function() {
                          isLoad = true;
-                         if (args == 1)
-                             callback();
+                         deferred.resolve();
                      });
                  });
              } else {
-                 callback();
+                 deferred.resolve();
              }
-
+             return deferred.promise;
          }
 
         function signin(mode, authorizeCallback) {
 
-            load(function (){
+            load().then(function (){
               var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
               if(mode) {
                 config.user_id = $cookies.get('userId');
@@ -247,10 +244,10 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 });
                 return deferred.promise;
             },
-            
+
             setToken: function(token){
                 var deferred = $q.defer();
-                load(function (){
+                load().then(function (){
                     $window.gapi.auth.setToken(token);
                     getUser().then(function () {
                         deferred.resolve();
@@ -260,18 +257,18 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 });
                 return deferred.promise;
             },
-            
+
             getToken: function(){
                 var deferred = $q.defer();
-                load(function (){
+                load().then(function (){
                     deferred.resolve($window.gapi.auth.getToken());
                 });
                 return deferred.promise;
             },
-            
+
             logout: function(){
                 var deferred = $q.defer();
-                load(function() {
+                load().then(function() {
                     $window.gapi.auth.setToken(null);
                     GData.isLogin(false);
                     GData.getUser(null);
@@ -279,7 +276,7 @@ angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GCl
                 });
                 return deferred.promise;
             },
-            
+
             offline: function(){
                 var deferred = $q.defer();
                 offline().then( function(code){
@@ -314,7 +311,7 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
         };
 
         function load(api, version, url) {
-            GClient.get(function (){
+            GClient.get().then(function (){
                 $window.gapi.client.load(api, version, function() {
                     console.log(api+" "+version+" api loaded");
                     apisLoad.push(api);
@@ -341,20 +338,23 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
 
         }
 
-        function runGapi(api, method, params, deferred) {
-
+        function createRequest(api, method, params) {
             var pathMethod = method.split('.');
             var api = $window.gapi.client[api];
             for(var i= 0; i < pathMethod.length; i++) {
                 api = api[pathMethod[i]];
             }
-            api(params).execute(function (response) {
-                if (response.error) {
-                    deferred.reject(response);
-                } else {
-                    deferred.resolve(response);
-                }
-            });
+            return api(params);
+        }
+
+        function runGapi(api, method, params, deferred) {
+          createRequest(api, method, params).execute(function (response) {
+              if (response.error) {
+                  deferred.reject(response);
+              } else {
+                  deferred.resolve(response);
+              }
+          });
         }
 
         function execute(api, method, params, auth) {
@@ -373,9 +373,8 @@ angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData',
                 executeCallbacks();
             },
 
-            load: function(name, version, url){
-                load(name, version, url);
-            },
+            load: load,
+            createRequest: createRequest,
 
             execute: function(api, method, params){
                 if(arguments.length == 3)
