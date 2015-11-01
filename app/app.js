@@ -8,8 +8,10 @@ var app = angular.module('angular-google-api-example', [
 
 ]);
 
-app.run(['GAuth', 'GApi', '$state', '$rootScope', '$window',
-    function(GAuth, GApi, $state, $rootScope, $window) {
+app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope', '$window',
+    function(GAuth, GApi, GData, $state, $rootScope, $window) {
+
+        $rootScope.gdata = GData;
 
         var CLIENT = '526374069175-4vv42arm0ksdr9a1lgkve6vbktfkmlvv.apps.googleusercontent.com';
         var BASE;
@@ -18,6 +20,8 @@ app.run(['GAuth', 'GApi', '$state', '$rootScope', '$window',
         } else {
             BASE = 'https://cloud-endpoints-gae.appspot.com/_ah/api';
         }
+
+          BASE = 'https://cloud-endpoints-gae.appspot.com/_ah/api';
 
         GApi.load('myContactApi', 'v1', BASE);
         GApi.load('calendar', 'v3');
