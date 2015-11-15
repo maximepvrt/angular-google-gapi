@@ -61,7 +61,7 @@ app.run(['GAuth', 'GApi', '$state',
 	GApi.load('myApiName','v1',BASE);
 
         GAuth.setClient(CLIENT);
-        
+
         GAuth.checkAuth().then(
             function () {
                 $state.go('webapp.home'); // an example of action if it's possible to
@@ -72,8 +72,9 @@ app.run(['GAuth', 'GApi', '$state',
 					  // authenticate user at startup of the application
             }
         );
-        
+
     }
+    ]);
 ```
 
 ## Use
@@ -139,7 +140,7 @@ app.controller('myController', ['$scope', 'GApi',
 ```javascript
 app.controller('myController', ['$scope', 'GAuth', '$state',
     function myController($scope, GAuth, $state) {
-        
+
 	$scope.doSingup = function() {
       	    GAuth.login().then(function(){
         	$state.go('webapp.home'); // action after the user have validated that
@@ -167,7 +168,7 @@ app.controller('myController', ['$rootScope',
 ```html
 <h1>{{gapi.user.name}}</h1>
 ```
-User object : 
+User object :
  - user.email
  - user.picture (url)
  - user.id (Google id)
