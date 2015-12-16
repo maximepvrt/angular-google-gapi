@@ -33,7 +33,7 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
         function load(callback) {
                 loadScript(URL).then(function() {
                     var isok = function(callback) {
-                        if($window.gapi.client != undefined) {
+                        if($window.gapi.client != undefined && $window.gapi.client.load != undefined) {
                             callback();
                             $interval.cancel(check);
                         }
@@ -41,7 +41,7 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
                     isok(callback);
                     var check = $interval(function() {
                         isok(callback);
-                    }, 10);
+                    }, 1000);
                     LOAD_GAE_API = true;
                 });
         }
