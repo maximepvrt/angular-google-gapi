@@ -41,7 +41,7 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
                     isok(callback);
                     var check = $interval(function() {
                         isok(callback);
-                    }, 10);
+                    }, 1000);
                     LOAD_GAE_API = true;
                 });
         }
