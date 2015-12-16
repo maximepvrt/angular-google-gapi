@@ -33,7 +33,7 @@ angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$t
         function load(callback) {
                 loadScript(URL).then(function() {
                     var isok = function(callback) {
-                        if($window.gapi.client != undefined) {
+                        if($window.gapi.client != undefined && $window.gapi.client.load != undefined) {
                             callback();
                             $interval.cancel(check);
                         }
