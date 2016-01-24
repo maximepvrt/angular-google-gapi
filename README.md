@@ -88,6 +88,7 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
         );
 
     }
+]);
 ```
 
 ### GApi.load Error handling
