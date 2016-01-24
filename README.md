@@ -12,7 +12,7 @@ The code is available here : https://github.com/maximepvrt/angular-google-gapi/t
 
 ## Requirements
 
-- [AngularJS](http://angularjs.org)
+- [Angular.js](http://angularjs.org)
 
 ## Installation
 ### Add library
@@ -21,10 +21,17 @@ This module is available as bower package, install it with this command:
 ```bash
 bower install angular-google-gapi
 ```
+
+and it's available too as npm package, install it with this command:
+
+```bash
+npm install angular-google-gapi
+```
+
 or you may download the [latest release](https://github.com/maximepvrt/angular-google-gapi/releases)
 
 ```html
-<script type="text/javascript" src="vendors/angular-google-gapi.min.js"></script>
+<script type="text/javascript" src="/angular-google-gapi/dist/angular-google-gapi.min.js"></script>
 ```
 ### Add dependency
 
@@ -41,9 +48,11 @@ add run in root module
 app.run(['GApi', 'GAuth',
     function(GApi, GAuth) {
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
-        GApi.load('myApiName','v1',BASE);
-        GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
-        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
+        GApi.load('myApiName','v1',BASE).then(function(resp) {
+            console.log('api: ' + resp.api + ', version: ' + resp.version + ' loaded');
+        }, function(resp) {
+            console.log('an error occured during loading api: ' + resp.api + ', resp.version: ' + version);
+        });
     }
 ]);
 ```
@@ -52,29 +61,45 @@ app.run(['GApi', 'GAuth',
 add run in root module
 
 ```javascript
-app.run(['GAuth', 'GApi', '$state',
-    function(GAuth, GApi, $state) {
+app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
+    function(GAuth, GApi, Gdata, $state, $rootScope) {
+
+        $rootScope.gdata = GData;
 
         var CLIENT = 'yourGoogleAuthAPIKey';
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
 
-	GApi.load('myApiName','v1',BASE);
+	    GApi.load('myApiName','v1',BASE);
+	    GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
 
         GAuth.setClient(CLIENT);
-        
+        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
+
         GAuth.checkAuth().then(
-            function () {
+            function (user) {
+                console.log(user.name + 'is login')
                 $state.go('webapp.home'); // an example of action if it's possible to
                 			  // authenticate user at startup of the application
             },
             function() {
-		$state.go('login');       // an example of action if it's impossible to
+		        $state.go('login');       // an example of action if it's impossible to
 					  // authenticate user at startup of the application
             }
         );
-        
+
     }
+]);
 ```
+
+### GApi.load Error handling
+ +
+ +```javascript
+ +GApi.load('myApiName','v1',BASE)
+ +    .catch(function(api, version) {
+ +        console.log('an error occured during loading api: ' + api + ', version: ' + version);
+ +    });
+ +```
+ +
 
 ## Use
 
@@ -139,10 +164,11 @@ app.controller('myController', ['$scope', 'GApi',
 ```javascript
 app.controller('myController', ['$scope', 'GAuth', '$state',
     function myController($scope, GAuth, $state) {
-        
+
 	$scope.doSingup = function() {
-      	    GAuth.login().then(function(){
-        	$state.go('webapp.home'); // action after the user have validated that
+      	    GAuth.login().then(function(user){
+                console.log(user.name + 'is login')
+        	    $state.go('webapp.home'); // action after the user have validated that
         				  // your application can access their Google account.
             }, function() {
             	console.log('login fail');
@@ -159,19 +185,23 @@ Get user info after login is very simple.
 ```javascript
 app.controller('myController', ['$rootScope',
     function myController($rootScope) {
-        console.log($rootScope.gapi.user)
+        console.log($rootScope.gdata.getUser().name)
     }
 ]);
 ```
 
 ```html
-<h1>{{gapi.user.name}}</h1>
+<h1>{{gdata.getUser().name}}</h1>
 ```
-User object : 
+User object :
  - user.email
  - user.picture (url)
  - user.id (Google id)
  - user.name (Google account name or email if don't exist)
  - user.link (link to Google+ page)
 
+## Development
 
+Gulp is used to minify angular-google-gapi.js (using Uglify). Execute 'npm install' (requires Node and NPM) to install the required packages.
+
+Run "gulp" to generate a minified version (angular-google-gapi.min.js). Note that this requires gulp to be installed globally (via 'npm install -g gulp').
