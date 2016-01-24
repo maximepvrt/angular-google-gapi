@@ -1,4 +1,4 @@
-Angular Google GApi
+Angular Google GApi [![David](https://img.shields.io/david/maximepvrt/angular-google-gapi.svg)]()
 =======================
 
 An AngularJS module for use all Google Apis and your Google Cloud Endpoints (Google App Engine) with OAuth.
