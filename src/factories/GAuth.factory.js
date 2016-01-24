@@ -40,9 +40,9 @@
 
             function offline() {
                 var deferred = $q.defer();
-                var origin = $location.protocol + "//" + $location.hostname;
-                if($location.port != "") {
-                    origin = origin + ':' + $location.port;
+                var origin = $location.protocol() + "//" + $location.hostname();
+                if($location.port() != "") {
+                    origin = origin + ':' + $location.port();
                 }
                 var win =  $window.open('https://accounts.google.com/o/oauth2/auth?scope='+encodeURI(SCOPE)+'&redirect_uri=postmessage&response_type=code&client_id='+CLIENT_ID+'&access_type=offline&approval_prompt=force&origin='+origin, null, 'width=800, height=600');
 
