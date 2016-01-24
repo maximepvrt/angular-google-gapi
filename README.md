@@ -13,7 +13,6 @@ The code is available here : https://github.com/maximepvrt/angular-google-gapi/t
 ## Requirements
 
 - [Angular.js](http://angularjs.org)
-- [Angular-cookies.js](https://docs.angularjs.org/api/ngCookies)
 
 ## Installation
 ### Add library
@@ -22,10 +21,17 @@ This module is available as bower package, install it with this command:
 ```bash
 bower install angular-google-gapi
 ```
+
+and it's available too as npm package, install it with this command:
+
+```bash
+npm install angular-google-gapi
+```
+
 or you may download the [latest release](https://github.com/maximepvrt/angular-google-gapi/releases)
 
 ```html
-<script type="text/javascript" src="vendors/angular-google-gapi.min.js"></script>
+<script type="text/javascript" src="/angular-google-gapi/dist/angular-google-gapi.min.js"></script>
 ```
 ### Add dependency
 
@@ -42,9 +48,11 @@ add run in root module
 app.run(['GApi', 'GAuth',
     function(GApi, GAuth) {
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
-        GApi.load('myApiName','v1',BASE);
-        GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
-        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
+        GApi.load('myApiName','v1',BASE).then(function(resp) {
+            console.log('api: ' + resp.api + ', version: ' + resp.version + ' loaded');
+        }, function(resp) {
+            console.log('an error occured during loading api: ' + resp.api + ', resp.version: ' + version);
+        });
     }
 ]);
 ```
@@ -62,8 +70,10 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
 
 	    GApi.load('myApiName','v1',BASE);
+	    GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
 
         GAuth.setClient(CLIENT);
+        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
 
         GAuth.checkAuth().then(
             function (user) {
@@ -79,6 +89,16 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
 
     }
 ```
+
+### GApi.load Error handling
+ +
+ +```javascript
+ +GApi.load('myApiName','v1',BASE)
+ +    .catch(function(api, version) {
+ +        console.log('an error occured during loading api: ' + api + ', version: ' + version);
+ +    });
+ +```
+ +
 
 ## Use
 
