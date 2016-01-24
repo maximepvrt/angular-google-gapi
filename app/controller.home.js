@@ -5,7 +5,6 @@ controller.controller('angular-google-api-example.controller.home', ['$scope', '
 
         GApi.executeAuth('myContactApi', 'contact.all').then(function(resp) {
                 $scope.contacts = resp.items;
-                console.log(resp.items);
             });
 
         $scope.remove = function(contact){

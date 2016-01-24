@@ -3,9 +3,7 @@ var router = angular.module('angular-google-api-example.router', []);
 router
     .config(['$urlRouterProvider',
         function($urlRouterProvider) {
-
             $urlRouterProvider.otherwise("/login");
-
         }]);
 
 router

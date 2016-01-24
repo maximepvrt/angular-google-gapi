@@ -1,0 +1,31 @@
+{
+  "name": "angular-google-gapi",
+  "version": "1.0.0-beta.1",
+  "homepage": "https://maximepvrt.github.io/angular-google-gapi",
+  "authors": [
+    "maximepvrt <maximepvrt@gmail.com>"
+  ],
+  "description": "An AngularJS module for use all Google Apis and your Google Cloud Endpoints (Google App Engine) with OAuth. This module use Google APIs Client Library for JavaScript, available for all GApis.",
+  "main": "dist/angular-google-gapi.min.js",
+  "keywords": [
+    "google apis",
+    "google api",
+    "google app engine",
+    "gae",
+    "google cloud endpoints",
+    "angular.js",
+    "angular"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "angular": "~1.x"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.x"
+  }
+}

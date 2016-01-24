@@ -1,0 +1,14 @@
+{
+  "name": "angular-google-gapi-example",
+  "version": "1.0.0-SNAPSHOT",
+  "homepage": "https://maximepvrt.github.io/angular-google-gapi",
+  "authors": [
+    "maximepvrt <maximepvrt@gmail.com>"
+  ],
+  "description": "Example of angular-google-gapi",
+  "main": "dist/angular-google-gapi.min.js",
+  "dependencies": {
+    "angular-google-gapi": "~v1.0.0-beta.1",
+    "angular-ui-router": "~0.2.15"
+  }
+}
