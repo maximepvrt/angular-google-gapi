@@ -19,13 +19,21 @@
             };
 
             function load(api, version, url) {
+                var deferred = $q.defer();
                 GClient.get().then(function (){
-                    $window.gapi.client.load(api, version, function() {
-                        console.log(api+" "+version+" api loaded");
-                        apisLoad.push(api);
-                        executeCallbacks(api);
-                    }, url)
+                    $window.gapi.client.load(api, version, undefined, url).then(function(response) {
+                        var result = {'api': api, 'version': version, 'url': url};
+                        if(response && response.hasOwnProperty('error')) {
+                            console.log(version);
+                            deferred.reject(result);
+                        } else {
+                            deferred.resolve(result);
+                            apisLoad.push(api);
+                            executeCallbacks(api);
+                        }
+                    });
                 });
+                return deferred.promise;
             }
 
             function executeCallbacks(api){
