@@ -1,7 +1,7 @@
 (function() {
     'use strict';
-    angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$cookies', '$window', '$location',
-        function($rootScope, $q, GClient, GApi, GData, $interval, $cookies, $window, $location){
+    angular.module('angular-google-gapi').factory('GAuth', ['$rootScope', '$q', 'GClient', 'GApi', 'GData', '$interval', '$window', '$location',
+        function($rootScope, $q, GClient, GApi, GData, $interval, $window, $location){
             var isLoad = false;
 
             var CLIENT_ID;
@@ -29,10 +29,8 @@
                 load().then(function (){
                     var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
                     if(mode) {
-                        config.user_id = $cookies.get('userId');
+                        config.user_id = GData.getUserId();
                         config.immediate = true;
-                    } else {
-                        config.immediate = false;
                     }
                     if(DOMAIN != undefined)
                         config.hd = DOMAIN;
