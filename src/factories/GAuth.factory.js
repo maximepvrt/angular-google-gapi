@@ -82,17 +82,10 @@
                     if (!resp.code) {
                         GData.isLogin(true);
                         GApi.executeCallbacks();
-                        var user = {};
-                        user.email = resp.email;
-                        user.picture = resp.picture;
-                        user.id = resp.id;
                         if (!resp.name || 0 === resp.name.length)
-                            user.name = resp.email;
-                        else
-                            user.name = resp.name;
-                        user.link = resp.link;
-                        GData.getUser(user);
-                        deferred.resolve(user);
+                            resp.name = resp.email;
+                        GData.getUser(resp);
+                        deferred.resolve(resp);
                     } else {
                         deferred.reject();
                     }
