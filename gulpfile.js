@@ -11,7 +11,7 @@ gulp.task('clean', function () {
 
 gulp.task('build', ['clean'], function () {
     return gulp.src(['src/angular-google-gapi.module.js', 'src/factories/*.js'])
-        .pipe(concat('angular-google-client.js'))
+        .pipe(concat('angular-google-gapi.js'))
         .pipe(gulp.dest('dist'))
         .pipe(uglify({preserveComments: uglifySaveLicense}))
         .pipe(rename({extname: '.min.js'}))
