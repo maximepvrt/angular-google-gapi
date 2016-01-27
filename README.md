@@ -92,14 +92,13 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
 ```
 
 ### GApi.load Error handling
- +
- +```javascript
- +GApi.load('myApiName','v1',BASE)
- +    .catch(function(api, version) {
- +        console.log('an error occured during loading api: ' + api + ', version: ' + version);
- +    });
- +```
- +
+
+ ```javascript
+GApi.load('myApiName','v1',BASE)
+    .catch(function(api, version) {
+        console.log('an error occured during loading api: ' + api + ', version: ' + version);
+    });
+```
 
 ## Use
 
