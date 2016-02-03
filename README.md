@@ -1,5 +1,7 @@
-Angular Google GApi [![Travis](https://img.shields.io/travis/maximepvrt/angular-google-gapi.svg)]() [![David](https://img.shields.io/david/maximepvrt/angular-google-gapi.svg)]() [![npm](https://img.shields.io/npm/v/angular-google-gapi.svg)](https://www.npmjs.com/package/angular-google-gapi) [![Bower](https://img.shields.io/badge/bower-1.0.0--beta.1-orange.svg)](http://bower.io/search/?q=angular-google-gapi)
+Angular Google GApi [![Travis](https://img.shields.io/travis/maximepvrt/angular-google-gapi.svg)]() [![David](https://img.shields.io/david/maximepvrt/angular-google-gapi.svg)]() 
 =======================
+
+[![npm](https://img.shields.io/npm/v/angular-google-gapi.svg)](https://www.npmjs.com/package/angular-google-gapi) [![Bower](https://img.shields.io/badge/bower-1.0.0--beta.1-orange.svg)](http://bower.io/search/?q=angular-google-gapi)
 
 An AngularJS module for use all Google Apis and your Google Cloud Endpoints (Google App Engine) with OAuth.
 This module use [Google APIs Client Library for JavaScript](https://developers.google.com/api-client-library/javascript/), available for all GApis.
