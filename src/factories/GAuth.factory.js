@@ -123,7 +123,7 @@
                     var deferred = $q.defer();
                     signin(false, function() {
                         getUser().then(function (user) {
-                            deferred.resolve();
+                            deferred.resolve(user);
                         }, function () {
                             deferred.reject();
                         });
