@@ -1,6 +1,6 @@
 /**
  * An AngularJS module for use all Google Apis and your Google Cloud Endpoints
- * @version 1.0.0-beta.1
+ * @version 1.0.0-beta.2
  * @link https://github.com/maximepvrt/angular-google-gapi
  */
 
@@ -94,34 +94,35 @@
             }
 
             //exponentialBackoff
-            function retryExecute(actionPromise, args) {
-                var queryResults = $q.defer();
-                var iter = 0;
-                retry(actionPromise, iter);
-                function retry(actionPromise, iter) {
-                    actionPromise.apply(this, args).then(function(body) {
-                        queryResults.resolve(body);
-                    }).catch(function(error){
-                        if((error.code == 403 && error.message.toLowerCase().indexOf('limit exceeded')>-1) || error.code == 503){
-                            var base = 2;
-                            var ms = 1000;
-                            var randomMilliseconds = Math.floor((Math.random() * 1000) + 1);
-                            if(iter < 5){
-                                setTimeout(function(){
-                                    retry(actionPromise, ++iter);
-                                }, (ms * Math.pow(base, iter)) + randomMilliseconds);
-                            }
-                            else{
-                                queryResults.reject(error);
-                            }
-                        }
-                        else{
-                            queryResults.reject(error);
-                        }
-                    });
-                }
-                return queryResults.promise;
-            }
+             function retryExecute(actionPromise, args) {
+                 var queryResults = $q.defer();
+                 var iter = 0;
+                 retry(actionPromise, iter);
+                 function retry(actionPromise, iter) {
+                     actionPromise.apply(this, args).then(function(body) {
+                         queryResults.resolve(body);
+                     }).catch(function(error){
+                         if((error.code == 403 && error.message.toLowerCase().indexOf('limit exceeded')>-1) || error.code == 503){
+                             var base = 2;
+                             var ms = 1000;
+                             var randomMilliseconds = Math.floor((Math.random() * 1000) + 1);
+                             if(iter < 5){
+                                 setTimeout(function(){
+                                     retry(actionPromise, ++iter);
+                                 }, (ms * Math.pow(base, iter)) + randomMilliseconds);
+                             }
+                             else{
+                                 queryResults.reject(error);
+                             }
+                         }
+                         else{
+                             queryResults.reject(error);
+                         }
+                     });
+                 }
+                 return queryResults.promise;
+             }
+
 
             return {
 
@@ -273,7 +274,7 @@
                     var deferred = $q.defer();
                     signin(false, function() {
                         getUser().then(function (user) {
-                            deferred.resolve();
+                            deferred.resolve(user);
                         }, function () {
                             deferred.reject();
                         });
@@ -328,6 +329,7 @@
 
         }]);
 })();
+
 (function() {
     'use strict';
     angular.module('angular-google-gapi').factory('GClient', ['$document', '$q', '$window',
