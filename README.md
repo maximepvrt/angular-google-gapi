@@ -65,7 +65,7 @@ add run in root module
 
 ```javascript
 app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
-    function(GAuth, GApi, Gdata, $state, $rootScope) {
+    function(GAuth, GApi, GData, $state, $rootScope) {
 
         $rootScope.gdata = GData;
 
