@@ -25,17 +25,14 @@
             }
 
             function signin(mode, authorizeCallback) {
-
-                load().then(function (){
-                    var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
-                    if(mode) {
-                        config.user_id = GData.getUserId();
-                        config.immediate = true;
-                    }
-                    if(DOMAIN != undefined)
-                        config.hd = DOMAIN;
-                    $window.gapi.auth.authorize(config, authorizeCallback);
-                });
+                var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
+                if(mode) {
+                    config.user_id = GData.getUserId();
+                    config.immediate = true;
+                }
+                if(DOMAIN != undefined)
+                    config.hd = DOMAIN;
+                $window.gapi.auth.authorize(config, authorizeCallback);
             }
 
             function offline() {
