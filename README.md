@@ -78,18 +78,20 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
         GAuth.setClient(CLIENT);
         GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
 
-        GAuth.checkAuth().then(
-            function (user) {
-                console.log(user.name + 'is login')
-                $state.go('webapp.home'); // an example of action if it's possible to
-                			  // authenticate user at startup of the application
-            },
-            function() {
-		        $state.go('login');       // an example of action if it's impossible to
-					  // authenticate user at startup of the application
-            }
-        );
-
+	// load the auth api
+	GApi.load('oauth2', 'v2').then(function(resp) {
+	        GAuth.checkAuth().then(
+	            function (user) {
+	                console.log(user.name + 'is login')
+	                $state.go('webapp.home'); // an example of action if it's possible to
+	                			  // authenticate user at startup of the application
+	            },
+	            function() {
+			        $state.go('login');       // an example of action if it's impossible to
+						  // authenticate user at startup of the application
+	            }
+	        );
+        });
     }
 ]);
 ```
@@ -163,6 +165,7 @@ app.controller('myController', ['$scope', 'GApi',
 
 ### Signup with google
 
+The login should be triggered by a user action, or you might run into issues with popup blockers. More information about this can be found in the [Google APIs Client Library Documentation](https://developers.google.com/api-client-library/javascript/features/authentication#specifying-your-client-id-and-scopes).
 ```javascript
 app.controller('myController', ['$scope', 'GAuth', '$state',
     function myController($scope, GAuth, $state) {
