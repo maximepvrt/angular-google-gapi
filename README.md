@@ -78,20 +78,24 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
         GAuth.setClient(CLIENT);
         GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
 
-	// load the auth api
-	GApi.load('oauth2', 'v2').then(function(resp) {
-	        GAuth.checkAuth().then(
-	            function (user) {
-	                console.log(user.name + 'is login')
-	                $state.go('webapp.home'); // an example of action if it's possible to
-	                			  // authenticate user at startup of the application
-	            },
-	            function() {
-			        $state.go('login');       // an example of action if it's impossible to
-						  // authenticate user at startup of the application
-	            }
-	        );
-        });
+	// load the auth api so that it doesn't have to be loaded asynchronously
+	// when the user clicks the 'login' button. 
+	// That would lead to popup blockers blocking the auth window
+	GAuth.load();
+	
+	// or just call checkAuth, which in turn does load the oauth api.
+	// if you do that, GAuth.load(); is unnecessary
+        GAuth.checkAuth().then(
+            function (user) {
+                console.log(user.name + 'is login')
+                $state.go('webapp.home'); // an example of action if it's possible to
+                			  // authenticate user at startup of the application
+            },
+            function() {
+		        $state.go('login');       // an example of action if it's impossible to
+					  // authenticate user at startup of the application
+            }
+        );
     }
 ]);
 ```
