@@ -25,14 +25,25 @@
             }
 
             function signin(mode, authorizeCallback) {
-                var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
-                if(mode) {
-                    config.user_id = GData.getUserId();
-                    config.immediate = true;
+                function executeSignin(mode, authorizeCallback){
+                    var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
+                    if(mode) {
+                        config.user_id = GData.getUserId();
+                        config.immediate = true;
+                    }
+                    if(DOMAIN != undefined)
+                        config.hd = DOMAIN;
+                    $window.gapi.auth.authorize(config, authorizeCallback);
                 }
-                if(DOMAIN != undefined)
-                    config.hd = DOMAIN;
-                $window.gapi.auth.authorize(config, authorizeCallback);
+                
+                if(!mode && isLoad === true){
+                    // don't break the caller stack with async tasks
+                    executeSignin(mode, authorizeCallback);
+                } else {
+                    load().then(function (){
+                        executeSignin(mode, authorizeCallback);
+                    });
+                }
             }
 
             function offline() {
@@ -103,6 +114,8 @@
                 setScope: function(scope) {
                     SCOPE = scope;
                 },
+                
+                load: load,
 
                 checkAuth: function(){
                     var deferred = $q.defer();
