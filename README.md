@@ -78,6 +78,13 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
         GAuth.setClient(CLIENT);
         GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
 
+	// load the auth api so that it doesn't have to be loaded asynchronously
+	// when the user clicks the 'login' button. 
+	// That would lead to popup blockers blocking the auth window
+	GAuth.load();
+	
+	// or just call checkAuth, which in turn does load the oauth api.
+	// if you do that, GAuth.load(); is unnecessary
         GAuth.checkAuth().then(
             function (user) {
                 console.log(user.name + 'is login')
@@ -89,7 +96,6 @@ app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
 					  // authenticate user at startup of the application
             }
         );
-
     }
 ]);
 ```
@@ -163,6 +169,7 @@ app.controller('myController', ['$scope', 'GApi',
 
 ### Signup with google
 
+The login should be triggered by a user action, or you might run into issues with popup blockers. More information about this can be found in the [Google APIs Client Library Documentation](https://developers.google.com/api-client-library/javascript/features/authentication#specifying-your-client-id-and-scopes).
 ```javascript
 app.controller('myController', ['$scope', 'GAuth', '$state',
     function myController($scope, GAuth, $state) {
