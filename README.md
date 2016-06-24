@@ -22,7 +22,7 @@ The code is available here : https://github.com/maximepvrt/angular-google-gapi/t
 This module is available as bower package, install it with this command:
 
 ```bash
-bower install angular-google-gapi#1.0.0-beta.2
+bower install angular-google-gapi
 ```
 
 and it's available too as npm package, install it with this command:
