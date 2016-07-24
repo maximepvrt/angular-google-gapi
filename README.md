@@ -1,4 +1,4 @@
-Angular Google GApi 
+Angular Google GApi
 =======================
 [![Travis](https://img.shields.io/travis/maximepvrt/angular-google-gapi.svg)](https://travis-ci.org/maximepvrt/angular-google-gapi)
 [![David](https://img.shields.io/david/maximepvrt/angular-google-gapi.svg)]()
@@ -64,36 +64,34 @@ app.run(['GApi', 'GAuth',
 add run in root module
 
 ```javascript
-app.run(['GAuth', 'GApi', 'GData', '$state', '$rootScope',
-    function(GAuth, GApi, GData, $state, $rootScope) {
-
-        $rootScope.gdata = GData;
+app.run(['GAuth', 'GApi', '$rootScope',
+    function(GAuth, GApi, $rootScope) {
 
         var CLIENT = 'yourGoogleAuthAPIKey';
         var BASE = 'https://myGoogleAppEngine.appspot.com/_ah/api';
 
-	    GApi.load('myApiName','v1',BASE);
-	    GApi.load('calendar','v3'); // for google api (https://developers.google.com/apis-explorer/)
+	      GApi.load('myApiName','v1',BASE);
+	      GApi.load('anotherGoogleApi','v3'); // for google api (https://developers.google.com/apis-explorer/)
 
         GAuth.setClient(CLIENT);
-        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly"); // default scope is only https://www.googleapis.com/auth/userinfo.email
+        GAuth.setScope("https://www.googleapis.com/auth/userinfo.email"); // default scope is only https://www.googleapis.com/auth/userinfo.email
 
-	// load the auth api so that it doesn't have to be loaded asynchronously
-	// when the user clicks the 'login' button. 
-	// That would lead to popup blockers blocking the auth window
-	GAuth.load();
-	
-	// or just call checkAuth, which in turn does load the oauth api.
-	// if you do that, GAuth.load(); is unnecessary
+      	// load the auth api so that it doesn't have to be loaded asynchronously
+      	// when the user clicks the 'login' button.
+      	// That would lead to popup blockers blocking the auth window
+      	GAuth.load();
+
+      	// or just call checkAuth, which in turn does load the oauth api.
+      	// if you do that, GAuth.load(); is unnecessary
         GAuth.checkAuth().then(
             function (user) {
                 console.log(user.name + 'is login')
-                $state.go('webapp.home'); // an example of action if it's possible to
+                        // an example of action if it's possible to
                 			  // authenticate user at startup of the application
             },
             function() {
-		        $state.go('login');       // an example of action if it's impossible to
-					  // authenticate user at startup of the application
+		              // an example of action if it's impossible to
+					        // authenticate user at startup of the application
             }
         );
     }
