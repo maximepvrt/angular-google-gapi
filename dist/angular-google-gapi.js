@@ -164,7 +164,7 @@
                 var deferred = $q.defer();
                 if (isLoad == false) {
                     GClient.get().then(function (){
-                        $window.gapi.client.load('oauth2', 'v2', function() {
+                        $window.gapi.client.load('auth2', 'v2', function() {
                             isLoad = true;
                             deferred.resolve();
                         });
@@ -177,6 +177,8 @@
 
             function signin(mode, authorizeCallback) {
                 function executeSignin(mode, authorizeCallback){
+
+                    /*
                     var config = {client_id: CLIENT_ID, scope: SCOPE, immediate: false, authuser: -1, response_type: RESPONSE_TYPE};
                     if(mode) {
                         config.user_id = GData.getUserId();
@@ -185,6 +187,21 @@
                     if(DOMAIN != undefined)
                         config.hd = DOMAIN;
                     $window.gapi.auth.authorize(config, authorizeCallback);
+                    */
+
+                    //NEW SIGNIN CODE, THE MISSING PARAMETERS ARE NOT AVAIBLE IN THE NEW METHOD gapi.auth2.init
+                    gapi.auth2.init({
+                        client_id: CLIENT_ID,
+                        scope: SCOPE
+                    }).then(function (resp) {
+                         if (resp.isSignedIn.get() == true) {
+                            authorizeCallback();
+                        }
+                        else{
+                            gapi.auth2.getAuthInstance().signIn().then(authorizeCallback);    
+                        }
+                    });
+
                 }
                 
                 if(!mode && isLoad === true){
@@ -236,17 +253,26 @@
 
             function getUser() {
 
-                var deferred = $q.defer();
-                $window.gapi.client.oauth2.userinfo.get().execute(function(resp) {
+                var deferred = $q.defer();                
+                gapi.auth2.getAuthInstance().then(function(resp) {
                     if (!resp.code) {
+
+                        var profile = resp.currentUser.get().getBasicProfile();
+                        var userObj = {
+                            email: profile.getEmail(),
+                            id: profile.getId(),
+                            given_name: profile.getGivenName(),
+                            family_name: profile.getFamilyName(),
+                            picture: profile.getImageUrl(),
+                            name: profile.getName()
+                        };              
                         GData.isLogin(true);
                         GApi.executeCallbacks();
-                        if (!resp.name || 0 === resp.name.length)
-                            resp.name = resp.email;
-                        GData.getUser(resp);
-                        deferred.resolve(resp);
-                    } else {
-                        deferred.reject();
+                        GData.getUser(userObj);
+                        deferred.resolve(userObj);
+                    }
+                    else{
+                         deferred.reject();
                     }
                 });
                 return deferred.promise;
@@ -295,6 +321,8 @@
                 setToken: function(token){
                     var deferred = $q.defer();
                     load().then(function (){
+                        //TODO: THIS CODE SHOULD BE UPDATED, WE HAVE NOT CHANGE IT
+                        //Under my understanding this method shouldn't be used. It should be removed. Logout can be done in another way.
                         $window.gapi.auth.setToken(token);
                         getUser().then(function () {
                             deferred.resolve();
@@ -308,6 +336,8 @@
                 getToken: function(){
                     var deferred = $q.defer();
                     load().then(function (){
+                        //TODO: THIS CODE SHOULD BE UPDATED, WE HAVE NOT CHANGE IT
+                        //the token can be retrieved from GoogleUser.getAuthResponse()
                         deferred.resolve($window.gapi.auth.getToken());
                     });
                     return deferred.promise;
@@ -316,6 +346,8 @@
                 logout: function(){
                     var deferred = $q.defer();
                     load().then(function() {
+                        //TODO: THIS CODE SHOULD BE UPDATED, WE HAVE NOT CHANGE IT
+                        //Review the GoogleAuth.signOut() method
                         $window.gapi.auth.setToken(null);
                         GData.isLogin(false);
                         GData.getUser(null);
@@ -326,6 +358,7 @@
 
                 offline: function(){
                     var deferred = $q.defer();
+                    //TODO: Review the method GoogleAuth.grantOfflineAccess(options);
                     offline().then( function(code){
                         deferred.resolve(code);
                     }, function(){
