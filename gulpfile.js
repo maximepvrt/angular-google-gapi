@@ -10,7 +10,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('build', ['clean'], function () {
-    return gulp.src(['src/angular-google-gapi.module.js', 'src/factories/*.js'])
+    return gulp.src(['src/angular-google-gapi.module.js', 'src/factories/*.js', 'src/directives/*.js'])
         .pipe(concat('angular-google-gapi.js'))
         .pipe(gulp.dest('dist'))
         .pipe(uglify({preserveComments: uglifySaveLicense}))
@@ -18,10 +18,8 @@ gulp.task('build', ['clean'], function () {
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('run', ['clean', 'build']);
-
-gulp.task('watch', function () {
-    gulp.watch('src/**.js', ['run']);
+gulp.task('watch', ['build'], function () {
+    gulp.watch('src/**/*.js', ['build']);
 });
 
-gulp.task('default', ['run']);
+gulp.task('default', ['build']);

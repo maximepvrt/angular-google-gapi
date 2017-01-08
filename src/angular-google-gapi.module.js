@@ -1,6 +1,6 @@
 /**
  * An AngularJS module for use all Google Apis and your Google Cloud Endpoints
- * @version 1.0.0-beta.2
+ * @version 1.1.0-SNAPSHOT
  * @link https://github.com/maximepvrt/angular-google-gapi
  */
 

@@ -1,11 +1,11 @@
 (function() {
     'use strict';
-    angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData', '$window',
-        function($q, GClient, GData, $window){
+    angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GAuth', '$window',
+        function($q, GClient, GAuth, $window){
 
             var apisLoad  = [];
-
             var observerCallbacks = [];
+            var firstAuthExecute = true;
 
             function registerObserverCallback(api, method, params, auth, deferred){
                 var observerCallback = {};
@@ -24,7 +24,7 @@
                     $window.gapi.client.load(api, version, undefined, url).then(function(response) {
                         var result = {'api': api, 'version': version, 'url': url};
                         if(response && response.hasOwnProperty('error')) {
-                            console.log(version);
+                            console.log('impossible to load ' + api + ' ' + version);
                             deferred.reject(result);
                         } else {
                             deferred.resolve(result);
@@ -41,8 +41,8 @@
 
                 for(var i= 0; i < observerCallbacks.length; i++){
                     var observerCallback = observerCallbacks[i];
-                    if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || GData.isLogin() == true)) {
-                        runGapi(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
+                    if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || GAuth.isLogin())) {
+                        runGApi(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
                         if (i > -1) {
                             observerCallbacks.splice(i--, 1);
                         }
@@ -63,7 +63,7 @@
                 return api(params);
             }
 
-            function runGapi(api, method, params, deferred) {
+            function runGApi(api, method, params, deferred) {
                 createRequest(api, method, params).execute(function (response) {
                     if (response.error) {
                         deferred.reject(response);
@@ -76,14 +76,13 @@
             function execute(api, method, params, auth) {
                 var deferred = $q.defer();
                 if (apisLoad.indexOf(api) > -1) {
-                    runGapi(api, method, params, deferred);
-                }
-                else
+                    runGApi(api, method, params, deferred);
+                } else {
                     registerObserverCallback(api, method, params, auth, deferred);
+                }
                 return deferred.promise;
             }
 
-            //exponentialBackoff
              function retryExecute(actionPromise, args) {
                  var queryResults = $q.defer();
                  var iter = 0;
@@ -131,6 +130,14 @@
                 },
 
                 executeAuth: function(api, method, params){
+                    if(firstAuthExecute) {
+                        console.log('test');
+                        GAuth.signInListener(/*function () {
+                            console.log('ok');
+                            executeCallbacks();
+                        }*/);
+                        firstAuthExecute = false;
+                    }
                     if(arguments.length == 3)
                         return retryExecute(execute, arguments); //return execute(api, method, params, true)
                     if(arguments.length == 2)
