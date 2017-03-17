@@ -1,10 +1,13 @@
 (function() {
     'use strict';
-    angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', 'GData', '$window',
-        function($q, GClient, GData, $window){
+    angular.module('angular-google-gapi', []);
+})();
 
+(function() {
+    'use strict';
+    angular.module('angular-google-gapi').factory('GApi', ['$q', 'GClient', '$window', 'GAuth',
+        function($q, GClient, $window, GAuth){
             var apisLoad  = [];
-
             var observerCallbacks = [];
 
             function registerObserverCallback(api, method, params, auth, deferred){
@@ -19,12 +22,15 @@
             };
 
             function load(api, version, url) {
+                
+                //logTimer("GApi.load: " + api);
+
                 var deferred = $q.defer();
                 GClient.get().then(function (){
                     $window.gapi.client.load(api, version, undefined, url).then(function(response) {
                         var result = {'api': api, 'version': version, 'url': url};
                         if(response && response.hasOwnProperty('error')) {
-                            console.log(version);
+                            //logTimer(version);
                             deferred.reject(result);
                         } else {
                             deferred.resolve(result);
@@ -37,11 +43,12 @@
             }
 
             function executeCallbacks(api){
+
                 var apiName = api;
 
                 for(var i= 0; i < observerCallbacks.length; i++){
                     var observerCallback = observerCallbacks[i];
-                    if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || GData.isLogin() == true)) {
+                    if ((observerCallback.api == apiName || observerCallback.apiLoad) && (observerCallback.auth == false || GAuth.isSignedIn() == true)) {
                         runGapi(observerCallback.api, observerCallback.method, observerCallback.params, observerCallback.deferred);
                         if (i > -1) {
                             observerCallbacks.splice(i--, 1);
@@ -51,10 +58,10 @@
                             observerCallbacks[i]['apiLoad'] = true;
                     }
                 };
-
             }
 
-            function createRequest(api, method, params) {
+            function createRequest(api, method, params) {                
+                ////logTimer("GApi.createRequest: " + api);
                 var pathMethod = method.split('.');
                 var api = $window.gapi.client[api];
                 for(var i= 0; i < pathMethod.length; i++) {
@@ -83,6 +90,37 @@
                 return deferred.promise;
             }
 
+            //exponentialBackoff
+            function retryExecute(actionPromise, args) {
+                 var queryResults = $q.defer();
+                 var iter = 0;
+                 retry(actionPromise, iter);
+                 function retry(actionPromise, iter) {
+                     actionPromise.apply(this, args).then(function(body) {
+                         queryResults.resolve(body);
+                     }).catch(function(error){
+                         if((error.code == 403 && error.message.toLowerCase().indexOf('limit exceeded')>-1) || error.code == 503){
+                             var base = 2;
+                             var ms = 1000;
+                             var randomMilliseconds = Math.floor((Math.random() * 1000) + 1);
+                             if(iter < 5){
+                                 setTimeout(function(){
+                                     retry(actionPromise, ++iter);
+                                 }, (ms * Math.pow(base, iter)) + randomMilliseconds);
+                             }
+                             else{
+                                 queryResults.reject(error);
+                             }
+                         }
+                         else{
+                             queryResults.reject(error);
+                         }
+                     });
+                 }
+                 return queryResults.promise;
+            }
+
+
             return {
 
                 executeCallbacks : function() {
@@ -91,7 +129,6 @@
 
                 load: load,
                 createRequest: createRequest,
-
                 execute: function(api, method, params){
                     if(arguments.length == 3)
                         return execute(api, method, params, false);
@@ -101,9 +138,9 @@
 
                 executeAuth: function(api, method, params){
                     if(arguments.length == 3)
-                        return execute(api, method, params, true);
+                        return retryExecute(execute, arguments); //return execute(api, method, params, true)
                     if(arguments.length == 2)
-                        return execute(api, method, null, true);
+                        return retryExecute(execute, arguments); //return execute(api, method, null, true)
                 },
             }
         }]);
