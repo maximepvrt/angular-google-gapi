@@ -8,6 +8,7 @@
             var DOMAIN = undefined;
             var SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
             var RESPONSE_TYPE = 'token id_token';
+            var LOGIN_HINT = undefined;
 
             function load(){
                 var deferred = $q.defer();
@@ -32,6 +33,7 @@
                     if(mode) {
                         config.user_id = GData.getUserId();
                         config.immediate = true;
+                        config.login_hint = LOGIN_HINT;
                     }
                     if(DOMAIN != undefined)
                         config.hd = DOMAIN;
@@ -122,6 +124,10 @@
                 },
                 
                 load: load,
+
+                setLoginHint: function (login_hint) {
+                    LOGIN_HINT = login_hint
+                },
 
                 checkAuth: function(){
                     var deferred = $q.defer();
