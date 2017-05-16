@@ -32,6 +32,8 @@
                             executeCallbacks(api);
                         }
                     });
+                }, function (e) {
+                    deferred.reject(e);
                 });
                 return deferred.promise;
             }
