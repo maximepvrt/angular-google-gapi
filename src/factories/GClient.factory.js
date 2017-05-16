@@ -20,6 +20,11 @@
                         deferred.reject(e);
                     });
                 };
+                $window.onerror = function (e) {
+                    $timeout(function () {
+                        deferred.reject(e);
+                    });
+                };
                 script.src = src;
                 $document[0].body.appendChild(script);
                 return deferred.promise;
@@ -44,6 +49,8 @@
                                 for(var i= 0; i < OBSERVER_CALLBACKS.length; i++){
                                     OBSERVER_CALLBACKS[i].resolve();
                                 }
+                            }, function(e) {
+                                deferred.reject(e);
                             });
                         }
                     }
