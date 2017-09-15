@@ -55,7 +55,7 @@
             function offline() {
                 var deferred = $q.defer();
                 var origin = $location.protocol() + "://" + $location.host();
-                if($location.port()) {
+                if($location.port() && $location.port() !== 443) {
                     origin = origin + ':' + $location.port();
                 }
 
